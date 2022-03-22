@@ -1,43 +1,45 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { activateVoice, deactivateVoice } from "./audio_capture";
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "helloworld" is now active!');
+  console.log("Voice Collab is now active!");
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('helloworld.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello VS Code');
-	});
+  let websocketConnection;
 
-	let voice_disposable = vscode.commands.registerCommand('voice.teams_call', () => {
-		// use the voice recognition to record things and send a response
+  let disposable = vscode.commands.registerCommand("voice.notification", () => {
+    // send a notification to the user - like a test notification
 
+    vscode.window.showInformationMessage("Enjoy with Voice Collab");
+  });
 
-		vscode.window.showInformationMessage('Hello VS Code');
-	});
+  let activateVoiceDisposable = vscode.commands.registerCommand(
+    "voice.activate_voice",
+    () => {
+      // this opens up the websocket connection for voice recognition
 
+      activateVoice();
+      vscode.window.showInformationMessage("Voice recognition activated!");
+    }
+  );
 
-	context.subscriptions.push(disposable, voice_disposable);
+  let deactivateVoiceDisposable = vscode.commands.registerCommand(
+    "voice.deactivate",
+    () => {
+      // this closes the websocket connection
+
+      deactivateVoice();
+      vscode.window.showInformationMessage("Voice recognition deactivate!");
+    }
+  );
+
+  context.subscriptions.push(
+    disposable,
+    activateVoiceDisposable,
+    deactivateVoiceDisposable
+  );
 }
 
-
-
-
-
-// this method is called when your extension is deactivated
 export function deactivate() {
-
-
-	vscode.window.showInformationMessage('Thanks for using the extension.');
-
+  deactivateVoice();
+  vscode.window.showInformationMessage("Thanks for using the extension.");
 }
