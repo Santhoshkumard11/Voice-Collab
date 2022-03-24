@@ -1,38 +1,29 @@
-import { MediaRecorder, register } from "extendable-media-recorder";
+import { window } from "vscode";
+import * as WebSocket from "ws";
+import { log } from "./utils";
+export let ws: WebSocket;
 
+export function activateVoice() {
+  log("Activate voice mode");
 
-const stream = new navigator.mediaDevices.getUserMedia({ audio: true });
-const mediaRecoder = new MediaRecorder(stream);
+  ws = new WebSocket("ws://localhost:8001");
 
-DEEPGRAM_API_KEY = "";
-const { Deepgram } = require("@deepgram/sdk");
+  ws.onopen = () => {
+    ws.send("Connected with extension");
+    console.log("websocket connection is open!");
+  };
 
-const deepgram = new Deepgram(DEEPGRAM_API_KEY);
+  ws.onmessage = (message) => {
+    const received = JSON.parse(message.data.toString());
+    const transcript = received.message;
+    if (transcript) {
+      log("server - " + transcript);
+    }
+  };
+}
 
-const deepgramLive = deepgram.transcription.live({
-  punctuate: true,
-  // additional options
-})(async () => {
-  // Get the port a worker which can encode WAV files.
-  const port = await connect();
-  // Register this port with the MediaRecorder.
-  await register(port);
-  // Request a MediaStream with an audio track.
-  const mediaStream = await navigator.mediaDevices.getUserMedia({
-    audio: true,
-  });
-  // Create a MediaRecorder instance with the newly obtained MediaStream.
-  const mediaRecorder = new MediaRecorder(mediaStream, {
-    mimeType: "audio/wav",
-  });
-
-  // Kick off the recording.
-  mediaRecorder.start(250);
-
-  mediaRecorder.addEventListener("dataavailable", ({ data }) => {
-    // The data variable now holds a refrence to a Blob with the WAV file.
-  });
-
-  // Stop the recording after a second.
-  setTimeout(() => mediaRecorder.stop(), 1000);
-})();
+export function deactivateVoice() {
+  log("Deactivate voice mode");
+  ws.send("Extension deactivated");
+  ws.close();
+}
