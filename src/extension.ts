@@ -1,42 +1,29 @@
 import * as vscode from "vscode";
 import { activateVoice, deactivateVoice } from "./audio_capture";
+import { log } from "./utils";
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log("Voice Collab is now active!");
+  log("Voice Collab is now active!");
 
-  let websocketConnection;
-
-  let disposable = vscode.commands.registerCommand("voice.notification", () => {
+  vscode.commands.registerCommand("voice.notification", () => {
     // send a notification to the user - like a test notification
 
     vscode.window.showInformationMessage("Enjoy with Voice Collab");
   });
 
-  let activateVoiceDisposable = vscode.commands.registerCommand(
-    "voice.activate_voice",
-    () => {
-      // this opens up the websocket connection for voice recognition
+  vscode.commands.registerCommand("voice.activate_voice", () => {
+    // this opens up the websocket connection for voice recognition
 
-      activateVoice();
-      vscode.window.showInformationMessage("Voice recognition activated!");
-    }
-  );
+    activateVoice();
+    vscode.window.showInformationMessage("Voice recognition activated!");
+  });
 
-  let deactivateVoiceDisposable = vscode.commands.registerCommand(
-    "voice.deactivate",
-    () => {
-      // this closes the websocket connection
+  vscode.commands.registerCommand("voice.deactivate_voice", () => {
+    // this closes the websocket connection
 
-      deactivateVoice();
-      vscode.window.showInformationMessage("Voice recognition deactivate!");
-    }
-  );
-
-  context.subscriptions.push(
-    disposable,
-    activateVoiceDisposable,
-    deactivateVoiceDisposable
-  );
+    deactivateVoice();
+    vscode.window.showInformationMessage("Voice recognition deactivate!");
+  });
 }
 
 export function deactivate() {
