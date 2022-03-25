@@ -48,6 +48,7 @@ steps:
         *.vsix
         version.txt
         branch.txt
+        package.json
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   # Publish files as an artifact
@@ -56,3 +57,14 @@ steps:
     inputs:
       artifact: Voice-Collab
       targetPath: $(Build.ArtifactStagingDirectory)
+
+  - bash: |
+      sudo npm install -g vsce
+
+      PACKAGE_VERSION=$(cat version.txt)
+
+      vsce publish -p $MARKET_KEY --packagePath voice-collab-$PACKAGE_VERSION.vsix
+
+    displayName: Deploy
+    env:
+      MARKET_KEY: $(MARKET_KEY)
