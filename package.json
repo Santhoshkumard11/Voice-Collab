@@ -3,7 +3,7 @@
 	"displayName": "Voice Collab",
 	"description": "Let's harness the power of voice.",
 	"version": "0.0.1",
-	"publisher": "sandy_codes_py",
+	"publisher": "sandy-codes-py",
 	"engines": {
 		"vscode": "^1.65.0"
 	},
