@@ -1,0 +1,14 @@
+pool:
+  vmImage: ubuntu-16.04
+
+steps:
+  - bash: |
+      sudo npm install -g vsce
+
+      PACKAGE_VERSION=$(cat version.txt)
+
+      vsce publish -p $MARKET_KEY --packagePath voice-collab-$PACKAGE_VERSION.vsix
+    workingDirectory: "$(System.DefaultWorkingDirectory)/sandy-codes-py.Voice-Collab"
+    displayName: Deploy
+    env:
+      MARKET_KEY: $(vscekey)
