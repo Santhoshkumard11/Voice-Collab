@@ -49,6 +49,7 @@ steps:
         version.txt
         branch.txt
         package.json
+        tsconfig.json
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   # Publish files as an artifact
