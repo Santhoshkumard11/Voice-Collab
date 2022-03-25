@@ -9,3 +9,6 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 python/**
+out/
+node_modules/
+.github/

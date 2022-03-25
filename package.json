@@ -1,8 +1,9 @@
 {
-	"name": "helloworld",
-	"displayName": "HelloWorld",
-	"description": "",
+	"name": "voice-collab",
+	"displayName": "Voice Collab",
+	"description": "Let's harness the power of voice.",
 	"version": "0.0.1",
+	"publisher": "sandy_codes_py",
 	"engines": {
 		"vscode": "^1.65.0"
 	},
@@ -11,9 +12,12 @@
 	],
 	"activationEvents": [
 		"onCommand:voice.notification",
-		"onCommand:voice.activate_voice"
+		"onCommand:voice.activate_voice",
+		"onCommand:voice.deactivate_voice"
 	],
 	"main": "./out/extension.js",
+	"repository": "https://github.com/Santhoshkumard11/Voice-Collab",
+	"icon": "media/icon.png",
 	"contributes": {
 		"commands": [
 			{
