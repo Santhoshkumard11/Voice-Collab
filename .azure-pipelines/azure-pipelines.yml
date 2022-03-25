@@ -54,5 +54,5 @@ steps:
   - task: PublishPipelineArtifact@1
     displayName: Publish VSIX
     inputs:
-      artifact: git-mob-vs-code
+      artifact: Voice-Collab
       targetPath: $(Build.ArtifactStagingDirectory)
