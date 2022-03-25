@@ -1,14 +1,25 @@
-# Voice Collab 🎙🤝
+# Voice Collab 🔊 👨‍💻👩‍💻
+[![](https://vsmarketplacebadge.apphb.com/version-short/sandy-codes-py.voice-collab.svg)](https://marketplace.visualstudio.com/items?itemName=sandy-codes-py.voice-collab)
+[![](https://vsmarketplacebadge.apphb.com/rating-short/sandy-codes-py.voice-collab.svg)](https://marketplace.visualstudio.com/items?itemName=sandy-codes-py.voice-collab) 
+[![Build Status](https://dev.azure.com/sandy-codes-py/Voice-Collab/_apis/build/status/Voice-Collab?branchName=main)](https://dev.azure.com/sandy-codes-py/Voice-Collab/_build/latest?definitionId=1&branchName=main)
+![](https://vsmarketplacebadge.apphb.com/installs/sandy-codes-py.voice-collab.svg)
+[![License: MIT ](https://img.shields.io/github/license/mashape/apistatus.svg)](/LICENSE)
 
-Let's harness the power of voice.
 
-[![Board Status](https://dev.azure.com/santhoshkdhana/cf890c10-faa7-44a0-83dd-08cf28f0d25a/197798cc-c5b0-4480-acfd-81312da4f555/_apis/work/boardbadge/e11ca2f9-6565-4797-9e8b-fac9498bfe2c)](https://dev.azure.com/santhoshkdhana/cf890c10-faa7-44a0-83dd-08cf28f0d25a/_boards/board/t/197798cc-c5b0-4480-acfd-81312da4f555/Microsoft.RequirementCategory/)
+## Let's harness the power of voice.
 
-## Features
+## 🔥 Features
 
 - Start your Azure DevOps build with voice command
-- Call a person on teams
+- Call a person on team
+- Open Teams Chat with a person
 - Mail a person 
 - More Coming soon!
 
 
+## 📌 FAQ
+- The speech recognition is done with **speech_recognition** module
+
+## 💡 License
+
+This project is released under the MIT license.
