@@ -48,7 +48,6 @@ steps:
         *.vsix
         version.txt
         branch.txt
-        package.json
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   # Publish files as an artifact
