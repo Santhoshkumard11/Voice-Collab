@@ -16,8 +16,29 @@
 		"onCommand:voice.deactivate_voice"
 	],
 	"main": "./out/extension.js",
-	"repository": "https://github.com/Santhoshkumard11/Voice-Collab",
 	"icon": "media/icon.png",
+	"galleryBanner": {
+		"color": "#D4F1F4",
+		"theme": "dark"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Santhosh (aka Sandy)",
+		"email": "santhoshkdhana@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Santhoshkumard11/Voice-Collab"
+	},
+	"homepage": "https://github.com/Santhoshkumard11/Voice-Collab/blob/master/README.md",
+	"keywords": [
+		"azure",
+		"azure devops",
+		"python",
+		"real-time speech recognition",
+		"voice command",
+		"collaboration"
+	],
 	"contributes": {
 		"commands": [
 			{
@@ -35,12 +56,8 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"lint": "eslint . --ext .js"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.2.0",
