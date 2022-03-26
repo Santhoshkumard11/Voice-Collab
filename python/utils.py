@@ -43,9 +43,18 @@ def advanced_command_matching():
 
 
 def get_command_details(recognized_text: str):
+    """Try mapping the recognized text with one of the command in the mapping list
+
+    Args:
+        recognized_text (str): recognized test from user
+
+    Returns:
+        dict: information about the command matched or None if nothing is matched
+    """
     for command_id, search_string_list in COMMAND_MAPPINGS.items():
         for search_string in search_string_list:
             if search_string.find(recognized_text) != -1:
+
                 return COMMAND_DETAILS.get(command_id)
 
 
@@ -55,21 +64,29 @@ def execute_command(recognized_text: str):
     Args:
         text (str): recognized text
     """
-    command_info: dict = get_command_details(recognized_text)
+    try:
+        command_info: dict = get_command_details(recognized_text)
 
-    # return  if nothing matches the commands we have
-    if not command_info:
-        return
+        # return  if nothing matches the commands we have
+        if not command_info:
+            return
 
-    method_name: Callable = globals()[command_info.get("method_name")]
-    state: bool = method_name(*command_info.get("args"), **command_info.get("kargs"))
+        method_name_str = command_info.get("method_name")
+        logging.info(f"Match found - {method_name_str}")
 
-    text_to_speak = (
-        command_info.get("success_message")
-        if state
-        else command_info.get("failure_message")
-    )
+        method_name: Callable = globals()[method_name_str]
+        state: bool = method_name(
+            *command_info.get("args"), **command_info.get("kargs")
+        )
 
-    # speak out if there is any message for that command
-    if text_to_speak:
-        speak_out(text_to_speak)
+        text_to_speak = (
+            command_info.get("success_message")
+            if state
+            else command_info.get("failure_message")
+        )
+
+        # speak out if there is any message for that command
+        if text_to_speak:
+            speak_out(text_to_speak)
+    except Exception:
+        logging.exception("An error occurred while trying to execute command")

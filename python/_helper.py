@@ -1,5 +1,6 @@
 import os
 import webbrowser
+import logging
 
 
 def execute_on_shell(command_text: str):
@@ -32,7 +33,10 @@ def open_mail(email: str):
 def create_requirement_file(command_text: str):
     try:
         execute_on_shell(command_text)
-    except:
-        pass
+    except Exception as e:
+        logging.error(
+            f"Error while trying to create requirements.txt files. \nError below \n{e}"
+        )
+        return False
 
     return True
