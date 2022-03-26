@@ -21,6 +21,32 @@ def speak_out(text: str):
     engine.runAndWait()
 
 
+def show_help(content):
+    """Speak out the commands that the users can perform
+
+    Args:
+        content (str): how many to show
+    """
+    total_commands_counter = 0
+    commands_text = "Here are some commands that you can use, "
+    if content == "all":
+        for id, (_, command_info) in enumerate(COMMAND_MAPPINGS.items()):
+            if command_info.get("method_name").find("help") != -1:
+                commands_text += f".{command_info.get('description')}."
+                total_commands_counter += 1
+    else:
+        for id, (_, command_info) in enumerate(COMMAND_MAPPINGS.items()):
+            if command_info.get("method_name").find("help") != -1:
+                commands_text += f".{command_info.get('description')}."
+                total_commands_counter += 1
+            if id == 5:
+                break
+
+    text = f"There are a total of {total_commands_counter} commands that you can use."
+
+    speak_out(text + commands_text)
+
+
 def setup_logging():
     """setting up logging configuration"""
 

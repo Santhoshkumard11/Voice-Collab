@@ -5,7 +5,7 @@ DOMAIN_NAME = os.getenv("DOMAIN_NAME")
 COMMAND_DETAILS: dict = {
     1: {
         "method_name": "trigger_pipeline_run",
-        "description": "Triggering Azure DevOps pipeline ",
+        "description": "Triggering Azure DevOps pipeline",
         "success_message": "Successfully triggered pipeline build",
         "failure_message": "Failed to trigger pipeline build",
         "add_args": False,
@@ -14,6 +14,7 @@ COMMAND_DETAILS: dict = {
     },
     2: {
         "method_name": "create_requirement_file",
+        "description": "create the requirements.txt file",
         "args": ["pip freeze > requirements.txt"],
         "kargs": {},
         "success_message": "Successfully created requirements file",
@@ -22,33 +23,46 @@ COMMAND_DETAILS: dict = {
     },
     3: {
         "method_name": "get_total_pipeline_runs",
-        "description": "Triggering Azure DevOps pipeline ",
+        "description": "get all pipeline runs",
         "add_args": False,
         "args": [],
         "kargs": {},
     },
     4: {
         "method_name": "call_on_teams",
-        "description": "call some on teams",
+        "description": "call someone on teams",
         "add_args": True,
         "args": [],
         "kargs": {},
     },
     5: {
         "method_name": "open_mail",
-        "description": "mail some on teams",
+        "description": "mail someone on teams",
         "add_args": True,
         "args": [],
         "kargs": {},
     },
     6: {
         "method_name": "open_teams_chat",
-        "description": "call some on teams",
+        "description": "Open up someones teams chat",
         "add_args": True,
         "args": [],
         "kargs": {},
     },
-    # 7: {"method_name": "initiate_teams_call", "description": "call some on teams"},
+    7: {
+        "method_name": "show_help",
+        "description": "help",
+        "add_args": True,
+        "args": [],
+        "kargs": {},
+    },
+    8: {
+        "method_name": "show_help",
+        "description": "help",
+        "add_args": True,
+        "args": ["all"],
+        "kargs": {},
+    },
 }
 
 COMMAND_MAPPINGS: dict = {
@@ -58,8 +72,8 @@ COMMAND_MAPPINGS: dict = {
     4: [],
     5: [],
     6: [],
-    7: ["help", "what are the commands I can use"],
-    8: ["help more", "list all the commands I can use"]
+    7: ["show help", "help", "what are the commands I can use"],
+    8: ["help more", "list all the commands I can use"],
 }
 
 # Microsoft Accounts
