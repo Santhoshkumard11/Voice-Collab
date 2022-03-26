@@ -6,7 +6,11 @@ COMMAND_DETAILS: dict = {
     1: {
         "method_name": "trigger_pipeline_run",
         "description": "Triggering Azure DevOps pipeline ",
+        "success_message": "Successfully triggered pipeline build",
+        "failure_message": "Failed to trigger pipeline build",
         "add_args": False,
+        "args": [],
+        "kargs": {},
     },
     2: {
         "method_name": "create_requirement_file",
@@ -20,21 +24,29 @@ COMMAND_DETAILS: dict = {
         "method_name": "get_total_pipeline_runs",
         "description": "Triggering Azure DevOps pipeline ",
         "add_args": False,
+        "args": [],
+        "kargs": {},
     },
     4: {
         "method_name": "call_on_teams",
         "description": "call some on teams",
         "add_args": True,
+        "args": [],
+        "kargs": {},
     },
     5: {
         "method_name": "open_mail",
         "description": "mail some on teams",
         "add_args": True,
+        "args": [],
+        "kargs": {},
     },
     6: {
         "method_name": "open_teams_chat",
         "description": "call some on teams",
         "add_args": True,
+        "args": [],
+        "kargs": {},
     },
     # 7: {"method_name": "initiate_teams_call", "description": "call some on teams"},
 }
@@ -46,6 +58,8 @@ COMMAND_MAPPINGS: dict = {
     4: [],
     5: [],
     6: [],
+    7: ["help", "what are the commands I can use"],
+    8: ["help more", "list all the commands I can use"]
 }
 
 # Microsoft Accounts
@@ -74,9 +88,9 @@ def add_msft_account_to_commands():
     for account in MSFT_ACCOUNT_NAME_LIST:
         name = account.get("name")
 
-        COMMAND_MAPPINGS.get(4).append(f"call {name}")
-        COMMAND_MAPPINGS.get(5).append(f"mail {name}")
-        COMMAND_MAPPINGS.get(6).append(f"open {name}'s chat")
+        COMMAND_MAPPINGS.get(4).append(f"call {name.lower()}")
+        COMMAND_MAPPINGS.get(5).append(f"mail {name.lower()}")
+        COMMAND_MAPPINGS.get(6).append(f"open {name.lower()}'s chat")
 
 
 add_msft_account_to_commands()

@@ -1,26 +1,13 @@
 import logging
 import speech_recognition as sr
-import pyttsx3
 import asyncio
 import websockets
 import json
-from utils import setup_logging
+from utils import setup_logging, execute_command
 
 
 # Initialize the recognizer
 recognizer_obj: sr.Recognizer = sr.Recognizer()
-engine: pyttsx3.Engine = pyttsx3.init()
-
-
-def speak_out(text: str):
-    """Speak out things from the text
-
-    Args:
-        text (str): text to be spoken
-    """
-
-    engine.say(text)
-    engine.runAndWait()
 
 
 async def sender(ws: websockets):
@@ -42,8 +29,11 @@ async def sender(ws: websockets):
                 if recognized_text.find("stop transcription") is not -1:
                     logging.info("Exiting - user command")
                     await ws.send("closing connection - user command")
+                    await asyncio.sleep(2)
                     ws.close()
                     exit()
+
+                execute_command(recognized_text)
 
                 if recognized_text:
                     payload = json.dumps({"message": recognized_text})

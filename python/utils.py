@@ -2,7 +2,7 @@ import logging
 import coloredlogs
 import sys
 from _command_mapping import COMMAND_MAPPINGS, COMMAND_DETAILS, MSFT_ACCOUNT_NAME_LIST
-from _helper import create_requirements, open_mail, call_on_teams, open_teams_chat
+from _helper import create_requirement_file, open_mail, call_on_teams, open_teams_chat
 from azure import get_total_pipeline_runs, trigger_pipeline_run
 import pyttsx3
 from typing import Callable
@@ -52,7 +52,7 @@ def get_persons_email(recognized_text: str):
     """
 
     for account in MSFT_ACCOUNT_NAME_LIST:
-        if recognized_text.find(account.get("name")) != -1:
+        if recognized_text.find(account.get("name").lower()) != -1:
             return account.get("email")
 
 
@@ -67,13 +67,13 @@ def get_command_details(recognized_text: str):
     """
     for command_id, search_string_list in COMMAND_MAPPINGS.items():
         for search_string in search_string_list:
-            if search_string.find(recognized_text) != -1:
+            if recognized_text.find(search_string.lower()) != -1:
                 command_info = COMMAND_DETAILS.get(command_id)
                 if command_info.get("add_args"):
                     email_id = get_persons_email(recognized_text)
                     if not email_id:
                         return
-                    command_info["args"] = email_id
+                    command_info["args"] = [email_id]
 
                 return command_info
 
@@ -89,7 +89,7 @@ def execute_command(recognized_text: str):
 
         # return  if nothing matches the commands we have
         if not command_info:
-            logging.info("No match found!")
+            logging.info("No matching command found!")
             return
 
         method_name_str = command_info.get("method_name")
