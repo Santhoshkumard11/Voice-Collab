@@ -1,3 +1,7 @@
+import os
+
+DOMAIN_NAME = os.getenv("DOMAIN_NAME")
+
 COMMAND_DETAILS: dict = {
     1: {
         "method_name": "trigger_pipeline_run",
@@ -24,10 +28,10 @@ COMMAND_MAPPINGS: dict = {
 
 # Microsoft Accounts
 MSFT_ACCOUNT_NAME_LIST: list = [
-    {"name": "Grace", "id": "", "email": ""},
-    {"name": "Jack", "id": "", "email": ""},
-    {"name": "Adam", "id": "", "email": ""},
-    {"name": "Emily", "id": "", "email": ""},
+    {"name": "Alex", "id": "329423840-2384932-234832-324324", "email": f"AlexW{DOMAIN_NAME}"},
+    {"name": "Diago", "id": "987923-937920575-836589-75938", "email": f"DiegoS{DOMAIN_NAME}"},
+    {"name": "Grady", "id": "4985739-485692-958749", "email": f"GradyA{DOMAIN_NAME}"},
+    {"name": "Megan", "id": "8489879590-238779502-945790-459964", "email": f"MeganB{DOMAIN_NAME}"},
 ]
 
 

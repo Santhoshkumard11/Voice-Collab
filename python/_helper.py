@@ -27,3 +27,12 @@ def call_on_teams(email: str):
 def open_mail(email: str):
     url_mail_people = f"mailto:{email}"
     open_browser(url_mail_people)
+
+
+def create_requirement_file(command_text: str):
+    try:
+        execute_on_shell(command_text)
+    except:
+        pass
+
+    return True
