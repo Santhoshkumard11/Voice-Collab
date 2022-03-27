@@ -28,9 +28,8 @@ async def sender(ws: websockets):
 
                 if recognized_text.find("stop command mode") is not -1:
                     logging.info("Exiting - user command")
-                    await ws.send("closing connection - user command")
-                    await asyncio.sleep(2)
-                    ws.close()
+                    await ws.close(3002, "user command - closing connection")
+                    await ws.wait_closed()
                     exit()
 
                 execute_command(recognized_text)
@@ -41,7 +40,8 @@ async def sender(ws: websockets):
 
         except KeyboardInterrupt:
             logging.warning("Exiting from keyboard interrupt")
-            ws.close()
+            await ws.close(3001, "User command - Keyboard Interrupt")
+            await ws.wait_closed()
             exit()
 
         except sr.RequestError:

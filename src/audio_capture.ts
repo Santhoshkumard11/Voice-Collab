@@ -38,9 +38,9 @@ export function activateVoice() {
   ws.onclose = (event) => {
     log("closing connection in extension");
     if (event.wasClean) {
-      log(`Clean - Closing connection with the server \ncode - ${event.code} - \nreason - ${event.reason}`);
+      log(`Clean - Closing connection with the server \ncode - ${event.code} \nreason - ${event.reason}`);
     } else {
-      log("unClean - Closing websocket connection with the server");
+      log("Error - Closing websocket connection with the server");
     }
   };
 }
