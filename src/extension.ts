@@ -3,7 +3,7 @@ import { activateVoice, deactivateVoice } from "./audio_capture";
 import { log } from "./utils";
 
 export function activate(context: vscode.ExtensionContext) {
-  log("Voice Collab is now active!");
+  log("Voice Collab extension is now active!");
 
   vscode.commands.registerCommand("voice.notification", () => {
     // send a notification to the user - like a test notification

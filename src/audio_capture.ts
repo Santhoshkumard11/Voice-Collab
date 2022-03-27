@@ -4,13 +4,23 @@ import { log } from "./utils";
 export let ws: WebSocket;
 
 export function activateVoice() {
-  log("Activate voice mode");
+  log("Voice mode activated!");
 
-  ws = new WebSocket("ws://localhost:8001");
+  if (!ws) {
+    ws = new WebSocket("ws://localhost:8001");
+  } else {
+    if (ws.readyState !== 1) {
+      ws.close();
+      ws = new WebSocket("ws://localhost:8001");
+      log("Creating a new websocket connection");
+    } else {
+      log("There is an existing websocket connection");
+    }
+  }
 
   ws.onopen = () => {
     ws.send("Connected with extension");
-    console.log("websocket connection is open!");
+    log("websocket connection is open!");
   };
 
   ws.onmessage = (message) => {
@@ -18,6 +28,19 @@ export function activateVoice() {
     const transcript = received.message;
     if (transcript) {
       log("server - " + transcript);
+    }
+  };
+
+  ws.onerror = (event) => {
+    log(`An error occurred in the connection - ${event.message}`);
+  };
+
+  ws.onclose = (event) => {
+    log("closing connection in extension");
+    if (event.wasClean) {
+      log(`Clean - Closing connection with the server \ncode - ${event.code} - \nreason - ${event.reason}`);
+    } else {
+      log("unClean - Closing websocket connection with the server");
     }
   };
 }
