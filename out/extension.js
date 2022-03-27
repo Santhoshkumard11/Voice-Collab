@@ -5,7 +5,7 @@ const vscode = require("vscode");
 const audio_capture_1 = require("./audio_capture");
 const utils_1 = require("./utils");
 function activate(context) {
-    (0, utils_1.log)("Voice Collab is now active!");
+    (0, utils_1.log)("Voice Collab extension is now active!");
     vscode.commands.registerCommand("voice.notification", () => {
         // send a notification to the user - like a test notification
         vscode.window.showInformationMessage("Enjoy with Voice Collab");
