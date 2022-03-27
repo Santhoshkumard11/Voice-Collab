@@ -1,10 +1,12 @@
-import { window } from "vscode";
 import * as WebSocket from "ws";
 import { log } from "./utils";
 export let ws: WebSocket;
+import { statusBarObj } from "./extension";
 
 export function activateVoice() {
   log("Voice mode activated!");
+
+  // start the python script
 
   if (!ws) {
     ws = new WebSocket("ws://localhost:8001");
@@ -21,6 +23,9 @@ export function activateVoice() {
   ws.onopen = () => {
     ws.send("Connected with extension");
     log("websocket connection is open!");
+
+    // set the status to listening
+    statusBarObj.startListening();
   };
 
   ws.onmessage = (message) => {
@@ -38,7 +43,9 @@ export function activateVoice() {
   ws.onclose = (event) => {
     log("closing connection in extension");
     if (event.wasClean) {
-      log(`Clean - Closing connection with the server \ncode - ${event.code} \nreason - ${event.reason}`);
+      log(
+        `Clean - Closing connection with the server \ncode - ${event.code} \nreason - ${event.reason}`
+      );
     } else {
       log("Error - Closing websocket connection with the server");
     }

@@ -3,8 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivateVoice = exports.activateVoice = exports.ws = void 0;
 const WebSocket = require("ws");
 const utils_1 = require("./utils");
+const extension_1 = require("./extension");
 function activateVoice() {
     (0, utils_1.log)("Voice mode activated!");
+    // start the python script
     if (!exports.ws) {
         exports.ws = new WebSocket("ws://localhost:8001");
     }
@@ -21,6 +23,8 @@ function activateVoice() {
     exports.ws.onopen = () => {
         exports.ws.send("Connected with extension");
         (0, utils_1.log)("websocket connection is open!");
+        // set the status to listening
+        extension_1.statusBarObj.startListening();
     };
     exports.ws.onmessage = (message) => {
         const received = JSON.parse(message.data.toString());
