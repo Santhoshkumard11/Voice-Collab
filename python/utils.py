@@ -8,6 +8,9 @@ import pyttsx3
 from typing import Callable
 
 engine: pyttsx3.Engine = pyttsx3.init()
+engine.setProperty("rate", 125)
+voices = engine.getProperty("voices")
+engine.setProperty("voice", voices[1].id)
 
 
 def speak_out(text: str):
@@ -27,24 +30,33 @@ def show_help(content):
     Args:
         content (str): how many to show
     """
-    total_commands_counter = 0
-    commands_text = "Here are some commands that you can use, "
-    if content == "all":
-        for id, (_, command_info) in enumerate(COMMAND_MAPPINGS.items()):
-            if command_info.get("method_name").find("help") != -1:
-                commands_text += f".{command_info.get('description')}."
-                total_commands_counter += 1
-    else:
-        for id, (_, command_info) in enumerate(COMMAND_MAPPINGS.items()):
-            if command_info.get("method_name").find("help") != -1:
-                commands_text += f".{command_info.get('description')}."
-                total_commands_counter += 1
-            if id == 5:
-                break
+    command_success = True
+    try:
+        total_commands_counter = 0
+        commands_text = "Here are some commands that you can use, "
+        if content == "all":
+            for id, (_, command_info) in enumerate(COMMAND_DETAILS.items()):
+                if command_info.get("method_name").find("help") == -1:
+                    commands_text += f". {command_info.get('description')}."
+                    total_commands_counter += 1
+        else:
+            for id, (_, command_info) in enumerate(COMMAND_DETAILS.items()):
+                if command_info.get("method_name").find("help") == -1:
+                    commands_text += f"{command_info.get('description')}, "
+                    total_commands_counter += 1
+                if id == 5:
+                    break
 
-    text = f"There are a total of {total_commands_counter} commands that you can use."
+        text = f"There are a total of {total_commands_counter} commands. "
 
-    speak_out(text + commands_text)
+        complete_sentense = text + commands_text
+        logging.info(f"This is help - {complete_sentense}")
+        speak_out(complete_sentense)
+    except Exception:
+        logging.exception("func | show_help | See the below error ")
+        command_success = False
+
+    return command_success, ""
 
 
 def setup_logging():
@@ -119,20 +131,21 @@ def execute_command(recognized_text: str):
             return
 
         method_name_str = command_info.get("method_name")
-        logging.info(f"Match found - {method_name_str}")
+        logging.info(f"Command match found - {method_name_str}")
 
         method_name: Callable = globals()[method_name_str]
-        state: bool = method_name(
+        command_success, speak_args = method_name(
             *command_info.get("args"), **command_info.get("kargs")
         )
 
         text_to_speak = (
             command_info.get("success_message")
-            if state
+            if command_success
             else command_info.get("failure_message")
         )
+        if command_info.get("speak_args") and command_success is not False:
+            text_to_speak = text_to_speak.format(*speak_args)
 
-        # speak out if there is any message for that command
         if text_to_speak:
             speak_out(text_to_speak)
     except Exception:

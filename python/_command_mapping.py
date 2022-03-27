@@ -7,7 +7,7 @@ COMMAND_DETAILS: dict = {
         "method_name": "trigger_pipeline_run",
         "description": "Triggering Azure DevOps pipeline",
         "success_message": "Successfully triggered pipeline build",
-        "failure_message": "Failed to trigger pipeline build",
+        "failure_message": "Failed to trigger build pipeline",
         "add_args": False,
         "args": [],
         "kargs": {},
@@ -23,8 +23,11 @@ COMMAND_DETAILS: dict = {
     },
     3: {
         "method_name": "get_total_pipeline_runs",
-        "description": "get all pipeline runs",
+        "description": "get all pipeline runs count",
+        "success_message": "There are a total of {} pipeline runs",
+        "failure_message": "Failed to get the pipeline runs",
         "add_args": False,
+        "speak_args": True,
         "args": [],
         "kargs": {},
     },
@@ -37,7 +40,7 @@ COMMAND_DETAILS: dict = {
     },
     5: {
         "method_name": "open_mail",
-        "description": "mail someone on teams",
+        "description": "mail someone on Outlook",
         "add_args": True,
         "args": [],
         "kargs": {},
@@ -52,14 +55,14 @@ COMMAND_DETAILS: dict = {
     7: {
         "method_name": "show_help",
         "description": "help",
-        "add_args": True,
-        "args": [],
+        "add_args": False,
+        "args": [""],
         "kargs": {},
     },
     8: {
         "method_name": "show_help",
         "description": "help",
-        "add_args": True,
+        "add_args": False,
         "args": ["all"],
         "kargs": {},
     },
@@ -67,11 +70,11 @@ COMMAND_DETAILS: dict = {
 
 COMMAND_MAPPINGS: dict = {
     1: ["start build", "trigger build pipeline"],
-    2: ["create requirements.txt", "create requirements"],
+    2: ["create requirements.txt", "create requirements file"],
     3: ["get total pipeline runs"],
-    4: [],
-    5: [],
-    6: [],
+    4: [],  # dynamic addition
+    5: [],  # dynamic addition
+    6: [],  # dynamic addition
     7: ["show help", "help", "what are the commands I can use"],
     8: ["help more", "list all the commands I can use"],
 }
@@ -108,3 +111,5 @@ def add_msft_account_to_commands():
 
 
 add_msft_account_to_commands()
+
+# TODO: add other general chit chat stuff to the commands

@@ -2,9 +2,7 @@ import os
 import requests
 import json
 import logging
-
-# from urllib.request import pathname2url
-from pprint import pprint
+from _helper import current_method_name
 
 ORGANIZATION = "sandy-codes-py"
 PROJECT = "Voice-Collab"
@@ -35,14 +33,19 @@ def trigger_pipeline_run():
     """
 
     URL = f"https://dev.azure.com/{ORGANIZATION}/{PROJECT}/_apis/pipelines/{PIPELINE_ID}/runs?api-version=7.1-preview.1"
+    command_success = True
+    try:
+        response = send_post_request(URL)
 
-    response = send_post_request(URL)
+        if response.status_code == 200:
+            logging.info("Build started successfully")
+        else:
+            command_success = False
+    except Exception:
+        logging.exception(f"func | {current_method_name()} | See the below error")
+        command_success = False
 
-    if response.status_code == 200:
-        logging.info("Build started successfully")
-        return True, ""
-    else:
-        return False, ""
+    return command_success, ""
 
 
 def total_backlog_items():
@@ -51,7 +54,6 @@ def total_backlog_items():
     result = send_get_request(url)
 
     result = json.loads(result.text)
-    pprint(result)
 
     print(len(result.items()))
 
@@ -63,21 +65,24 @@ def get_total_work_items():
     result = send_get_request(url)
 
     result = json.loads(result.text)
-    pprint(result)
 
     print(len(result.items()))
 
 
 def get_total_pipeline_runs():
+    command_success = True
     url = f"https://dev.azure.com/{ORGANIZATION}/{PROJECT}/_apis/pipelines/{PIPELINE_ID}/runs?api-version=6.0-preview.1"
-    print(url)
-    result = send_get_request(url)
+    try:
+        result = send_get_request(url)
 
-    result = json.loads(result.text)
-    total_count = result.get("count")
-    print(total_count)
+        result = json.loads(result.text)
+        total_count = result.get("count")
 
-    return total_count
+    except Exception:
+        logging.exception(f"func | {current_method_name()} | See the below error")
+        command_success = False
+
+    return command_success, [total_count]
 
 
 def get_others_tickets():

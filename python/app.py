@@ -26,7 +26,7 @@ async def sender(ws: websockets):
 
                 logging.info(f"Recognized text - {recognized_text}")
 
-                if recognized_text.find("stop transcription") is not -1:
+                if recognized_text.find("stop command mode") is not -1:
                     logging.info("Exiting - user command")
                     await ws.send("closing connection - user command")
                     await asyncio.sleep(2)

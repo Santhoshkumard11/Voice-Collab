@@ -179,3 +179,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+__snippet.ipynb
+__snippet.py
