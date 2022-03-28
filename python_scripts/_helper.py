@@ -5,7 +5,6 @@ import inspect
 import ctypes
 import random
 from _constants import PROGRAMMER_STROY, PROGREAMMER_MEME
-from azure import send_post_request
 
 
 def current_method_name():
@@ -74,11 +73,13 @@ def commit_code():
 
 
 def push_code():
-    os.system("git push")
+    # os.system("git push")
+    return True, []
 
 
 def lock_screen():
     ctypes.windll.user32.LockWorkStation()
+    return True, []
 
 
 def temp_commit_lock_screen():
@@ -86,17 +87,17 @@ def temp_commit_lock_screen():
     lock_screen()
 
 
-def send_email(email_id: str):
-    url = "https://graph.microsoft.com/v1.0/me/sendMail"
-    email_template = {
-        "message": {
-            "subject": "",
-            "body": {"contentType": "Text", "content": ""},
-            "toRecipients": [{"emailAddress": {"address": ""}}],
-        }
-    }
+# def send_email(email_id: str):
+#     url = "https://graph.microsoft.com/v1.0/me/sendMail"
+#     email_template = {
+#         "message": {
+#             "subject": "",
+#             "body": {"contentType": "Text", "content": ""},
+#             "toRecipients": [{"emailAddress": {"address": ""}}],
+#         }
+#     }
 
-    response = send_post_request(url, email_template, "graph_api")
+#     response = send_post_request(url, email_template, "graph_api")
 
 
 def crack_joke():

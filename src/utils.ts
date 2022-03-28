@@ -48,7 +48,6 @@ export class RecognizerRunner {
   private execFile;
   // @ts-ignore
   private child;
-  private side = false;
   private setupSuccess = true;
   constructor() {
     this.sysType = platform();
@@ -84,7 +83,7 @@ export class RecognizerRunner {
 
   killRecognizer() {
     // stop the recognizer - python server
-    this.child.disconnect();
+    this.child.kill("SIGTERM");
   }
 }
 
@@ -137,4 +136,11 @@ export function startRecognizer() {
   statusBarObj.startListening();
   
   return runStatus;
+}
+
+
+export function stopRecognizer()
+{
+  recognizer.killRecognizer();
+  log("Killed voice recognizer!");
 }

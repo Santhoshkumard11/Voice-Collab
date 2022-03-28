@@ -125,7 +125,7 @@ COMMAND_MAPPINGS: dict = {
     10: ["taking a break", "break time"],
     11: ["lock screen"],
     12: ["crack a joke", "joke about programmers", "make me feel better"],
-    13: ["tell a story", "story time"]
+    13: ["tell a story", "story time"],
 }
 
 

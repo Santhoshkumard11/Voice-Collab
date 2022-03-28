@@ -11,6 +11,7 @@ TEAM = "Voice-Collab%20Team"
 
 # GET_RUNS_URL = "https://dev.azure.com/sandy-codes-py/Voice-Collab/_apis/pipelines/1/runs?api-version=7.1-preview.1"
 
+
 def current_method_name():
     return inspect.stack()[1][3]
 
@@ -21,12 +22,12 @@ def send_post_request(url: str, data={}, api_name="DevOps"):
     Args:
         url (str): URL of the API
         data (dict, optional): data to be sent in json. Defaults to {}.
-        api_name (str, optional): the name of the api you want to call  
+        api_name (str, optional): the name of the api you want to call
 
     Returns:
         response: response from the request
     """
-    
+
     if api_name == "graph_api":
         return requests.post(
             url,
@@ -153,9 +154,9 @@ def last_pipeline_status():
     send_get_request(url)
 
 
-def get_high_important_mails():
-    url = "https://graph.microsoft.com/v1.0/me/messages?$filter=importance eq 'high'"
+# def get_high_important_mails():
+#     url = "https://graph.microsoft.com/v1.0/me/messages?$filter=importance eq 'high'"
 
 
-def get_metioned_emails():
-    url = "https://graph.microsoft.com/beta/me/messages?$filter=mentionsPreview/isMentioned eq true&$select=subject,sender,receivedDateTime"
+# def get_mentioned_emails():
+#     url = "https://graph.microsoft.com/beta/me/messages?$filter=mentionsPreview/isMentioned eq true&$select=subject,sender,receivedDateTime"

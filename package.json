@@ -15,7 +15,8 @@
 		"onCommand:voice.activate_voice",
 		"onCommand:voice.deactivate_voice",
 		"onCommand:voice.start_recognizer_server",
-		"onCommand:voice.setup_environment"
+		"onCommand:voice.setup_environment",
+		"onCommand:voice.stop_recognizer"
 	],
 	"main": "./out/extension.js",
 	"icon": "media/icon.png",
@@ -65,6 +66,10 @@
 			{
 				"command": "voice.setup_environment",
 				"title": "Voice Collab: Setup virtual Environment"
+			},
+			{
+				"command": "voice.stop_recognizer",
+				"title": "Voice Collab: Stop Voice Recognizer"
 			}
 		]
 	},

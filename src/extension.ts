@@ -5,6 +5,7 @@ import {
   StatusBarItem,
   setupVirtualEnvironment,
   startRecognizer,
+  stopRecognizer,
 } from "./utils";
 export let statusBarObj: StatusBarItem;
 export class GlobalVars {
@@ -13,9 +14,8 @@ export class GlobalVars {
 
 export function activate(context: vscode.ExtensionContext) {
   log("Voice Collab extension is now active!");
-   statusBarObj = new StatusBarItem();
+  statusBarObj = new StatusBarItem();
 
-  // pip install things here
   vscode.commands.registerCommand("voice.notification", () => {
     // send a notification to the user - like a test notification
     log("Just a notification");
@@ -33,7 +33,9 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showErrorMessage(
         "Start the voice recognizer server before activating voice command mode"
       );
-      log("Start the voice recognizer server before activating voice command mode");
+      log(
+        "Start the voice recognizer server before activating voice command mode"
+      );
     }
   });
 
@@ -42,7 +44,9 @@ export function activate(context: vscode.ExtensionContext) {
     if (!GlobalVars.recognizerActive) {
       setupVirtualEnvironment();
     } else {
-      vscode.window.showInformationMessage("Voice recognizer is already running!");
+      vscode.window.showInformationMessage(
+        "Voice recognizer is already running!"
+      );
     }
   });
 
@@ -67,6 +71,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     deactivateVoice();
     vscode.window.showInformationMessage("Voice recognition deactivate!");
+  });
+  vscode.commands.registerCommand("voice.stop_recognizer", () => {
+    stopRecognizer();
+    vscode.window.showInformationMessage("Voice recognizer stopped!");
   });
 }
 

@@ -182,3 +182,11 @@ cython_debug/
 
 __snippet.ipynb
 __snippet.py
+
+
+out/
+node_modules/
+.vscode-test/
+*.vsix
+coverage/
+dist/
