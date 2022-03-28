@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupVirtualEnvironment = exports.installRequirements = exports.RecognizerRunner = exports.StatusBarItem = exports.log = void 0;
+exports.startRecognizer = exports.setupVirtualEnvironment = exports.installRequirements = exports.RecognizerRunner = exports.StatusBarItem = exports.recognizer = exports.log = void 0;
 const vscode = require("vscode");
 const child_process_1 = require("child_process");
 const os_1 = require("os");
 const path_1 = require("path");
+const fs_1 = require("fs");
+const extension_1 = require("./extension");
 // logging with timestamp
 const timestamp = () => `[${new Date().toUTCString()}]`;
 const log = (...args) => console.log(timestamp(), " | ", ...args);
@@ -40,28 +42,31 @@ class RecognizerRunner {
     }
     runRecognizer() {
         if (this.sysType.startsWith("win")) {
-            this.child = this.execFile((0, path_1.join)(__dirname, "../venv/Scripts/python.exe"), [(0, path_1.join)(__dirname, "../python/app.py")]).on("error", (error) => this.showError(error));
+            this.child = this.execFile((0, path_1.join)(__dirname, "../venv/Scripts/python.exe"), [(0, path_1.join)(__dirname, "../python/app.py")]);
         }
         this.child.stdout.on("data", (data) => {
-            (0, exports.log)(`Data from server - ${data.toString()}`);
+            (0, exports.log)(`Data from Recognizer - ${data.toString()}`);
         });
-        this.child.stderr.on("data", (data) => this.showError(data.toString()));
+        this.child.stderr.on("data", (data) => {
+            console.log(`Recognizer - ${data.toString()}`);
+        });
         return this.setupSuccess;
     }
     showError(error) {
-        vscode.window.showInformationMessage(`Something went wrong - ${error}`);
+        // vscode.window.showInformationMessage(`Something went wrong - ${error}`);
         (0, exports.log)(`Error while trying to launch the recognizer python - ${error}`);
-        this.setupSuccess = false;
+        // this.setupSuccess = false;
     }
     killRecognizer() {
         // stop the recognizer - python server
-        this.child.stdin.write("kill");
-        this.child.stdin.end();
+        this.child.disconnect();
     }
 }
 exports.RecognizerRunner = RecognizerRunner;
 function installRequirements() {
-    (0, child_process_1.exec)("pip install -r ../requirements.txt").on("error", (error) => {
+    (0, exports.log)("Started installing the requirements");
+    // install the packages needed for recognizer
+    (0, child_process_1.exec)(`${(0, path_1.join)(__dirname, "../venv/Scripts/pip")} install -r ${(0, path_1.join)(__dirname, "../requirements.txt")}`).on("error", (error) => {
         (0, exports.log)("Error while installing requirements");
         vscode.window.showErrorMessage(`Can't install requirements file - ${error}`);
     });
@@ -69,12 +74,29 @@ function installRequirements() {
 exports.installRequirements = installRequirements;
 function setupVirtualEnvironment() {
     let runSuccess = true;
-    (0, child_process_1.exec)("py -m venv venv").on("error", (error) => {
-        (0, exports.log)("Error while creating virtual environment");
-        vscode.window.showErrorMessage(`Can't create virtual environment - ${error}`);
-        runSuccess = false;
-    });
-    return runSuccess;
+    if (!(0, fs_1.existsSync)((0, path_1.join)(__dirname, "../venv/Scripts/python.exe"))) {
+        (0, child_process_1.exec)("python -m venv venv").on("error", (error) => {
+            (0, exports.log)("Error while creating virtual environment");
+            vscode.window.showErrorMessage(`Can't create virtual environment - ${error}`);
+            runSuccess = false;
+        });
+        if (runSuccess) {
+            vscode.window.showInformationMessage("Successfully created the virtual environment!");
+            installRequirements();
+            (0, exports.log)("Successfully installed required packages for recognizer");
+        }
+    }
+    else {
+        (0, exports.log)("Virtual environment already exists");
+        vscode.window.showInformationMessage("Virtual environment already exists");
+    }
 }
 exports.setupVirtualEnvironment = setupVirtualEnvironment;
+function startRecognizer() {
+    exports.recognizer = new RecognizerRunner();
+    let runStatus = exports.recognizer.runRecognizer();
+    extension_1.statusBarObj.startListening();
+    return runStatus;
+}
+exports.startRecognizer = startRecognizer;
 //# sourceMappingURL=utils.js.map

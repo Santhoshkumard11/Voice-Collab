@@ -1,13 +1,12 @@
 import * as WebSocket from "ws";
 import { log } from "./utils";
 export let ws: WebSocket;
-import { statusBarObj } from "./extension";
+import { statusBarObj, GlobalVars } from "./extension";
+import { recognizer } from "./utils";
+import * as vscode from "vscode";
 
 export function activateVoice() {
   log("Voice mode activated!");
-
-  // start the python script
-
   if (!ws) {
     ws = new WebSocket("ws://localhost:8001");
   } else {
@@ -38,6 +37,8 @@ export function activateVoice() {
 
   ws.onerror = (event) => {
     log(`An error occurred in the connection - ${event.message}`);
+    statusBarObj.stopListening();
+    recognizer.killRecognizer();
   };
 
   ws.onclose = (event) => {
@@ -49,6 +50,10 @@ export function activateVoice() {
     } else {
       log("Error - Closing websocket connection with the server");
     }
+    statusBarObj.stopListening();
+    recognizer.killRecognizer();
+    GlobalVars.recognizerActive = false;
+    vscode.window.showInformationMessage("Voice Recognition server stopped!")
   };
 }
 
@@ -56,4 +61,6 @@ export function deactivateVoice() {
   log("Deactivate voice mode");
   ws.send("Extension deactivated");
   ws.close();
+  recognizer.killRecognizer();
+  GlobalVars.recognizerActive = false;
 }

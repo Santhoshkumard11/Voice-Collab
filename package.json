@@ -1,7 +1,7 @@
 {
 	"name": "voice-collab",
 	"displayName": "Voice Collab",
-	"description": "Let's harness the power of voice.",
+	"description": "Let's harness the power of voice to collaborate and interact with your code and the people you work with.",
 	"version": "0.0.1",
 	"publisher": "sandy-codes-py",
 	"engines": {
@@ -13,7 +13,9 @@
 	"activationEvents": [
 		"onCommand:voice.notification",
 		"onCommand:voice.activate_voice",
-		"onCommand:voice.deactivate_voice"
+		"onCommand:voice.deactivate_voice",
+		"onCommand:voice.start_recognizer_server",
+		"onCommand:voice.setup_environment"
 	],
 	"main": "./out/extension.js",
 	"icon": "media/icon.png",
@@ -37,7 +39,10 @@
 		"python",
 		"real-time speech recognition",
 		"voice command",
-		"collaboration"
+		"collaboration",
+		"Microsoft Outlook",
+		"Microsoft Teams",
+		"Teams Call"
 	],
 	"contributes": {
 		"commands": [
@@ -52,6 +57,14 @@
 			{
 				"command": "voice.deactivate_voice",
 				"title": "Voice Collab: Deactivate"
+			},
+			{
+				"command": "voice.start_recognizer_server",
+				"title": "Voice Collab: Start Recognizer Server"
+			},
+			{
+				"command": "voice.setup_environment",
+				"title": "Voice Collab: Setup virtual Environment"
 			}
 		]
 	},

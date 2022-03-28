@@ -4,9 +4,10 @@ exports.deactivateVoice = exports.activateVoice = exports.ws = void 0;
 const WebSocket = require("ws");
 const utils_1 = require("./utils");
 const extension_1 = require("./extension");
+const utils_2 = require("./utils");
+const vscode = require("vscode");
 function activateVoice() {
     (0, utils_1.log)("Voice mode activated!");
-    // start the python script
     if (!exports.ws) {
         exports.ws = new WebSocket("ws://localhost:8001");
     }
@@ -35,6 +36,8 @@ function activateVoice() {
     };
     exports.ws.onerror = (event) => {
         (0, utils_1.log)(`An error occurred in the connection - ${event.message}`);
+        extension_1.statusBarObj.stopListening();
+        utils_2.recognizer.killRecognizer();
     };
     exports.ws.onclose = (event) => {
         (0, utils_1.log)("closing connection in extension");
@@ -44,6 +47,10 @@ function activateVoice() {
         else {
             (0, utils_1.log)("Error - Closing websocket connection with the server");
         }
+        extension_1.statusBarObj.stopListening();
+        utils_2.recognizer.killRecognizer();
+        extension_1.GlobalVars.recognizerActive = false;
+        vscode.window.showInformationMessage("Voice Recognition server stopped!");
     };
 }
 exports.activateVoice = activateVoice;
@@ -51,6 +58,8 @@ function deactivateVoice() {
     (0, utils_1.log)("Deactivate voice mode");
     exports.ws.send("Extension deactivated");
     exports.ws.close();
+    utils_2.recognizer.killRecognizer();
+    extension_1.GlobalVars.recognizerActive = false;
 }
 exports.deactivateVoice = deactivateVoice;
 //# sourceMappingURL=audio_capture.js.map

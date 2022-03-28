@@ -1,12 +1,15 @@
 import * as vscode from "vscode";
-import { spawn, execFile, exec } from "child_process";
+import { spawn, execFile, exec, SpawnOptions } from "child_process";
 import { platform } from "os";
 import { join } from "path";
+import { existsSync } from "fs";
+import { statusBarObj } from "./extension";
 
 // logging with timestamp
 const timestamp = () => `[${new Date().toUTCString()}]`;
 export const log = (...args: string[]) =>
   console.log(timestamp(), " | ", ...args);
+export let recognizer: RecognizerRunner;
 
 export class StatusBarItem {
   private statusBarItem: vscode.StatusBarItem;
@@ -57,34 +60,40 @@ export class RecognizerRunner {
       this.child = this.execFile(
         join(__dirname, "../venv/Scripts/python.exe"),
         [join(__dirname, "../python/app.py")]
-      ).on("error", (error: any) => this.showError(error));
+      );
     }
     this.child.stdout.on("data", (data: Buffer) => {
-      log(`Data from server - ${data.toString()}`);
+      log(`Data from Recognizer - ${data.toString()}`);
     });
 
-    this.child.stderr.on("data", (data: any) =>
-      this.showError(data.toString())
-    );
+    this.child.stderr.on("data", (data: any) => {
+      console.log(`Recognizer - ${data.toString()}`);
+    });
 
     return this.setupSuccess;
   }
 
   showError(error: any) {
-    vscode.window.showInformationMessage(`Something went wrong - ${error}`);
+    // vscode.window.showInformationMessage(`Something went wrong - ${error}`);
     log(`Error while trying to launch the recognizer python - ${error}`);
-    this.setupSuccess = false;
+    // this.setupSuccess = false;
   }
 
   killRecognizer() {
     // stop the recognizer - python server
-    this.child.stdin.write("kill");
-    this.child.stdin.end();
+    this.child.disconnect();
   }
 }
 
 export function installRequirements() {
-  exec("pip install -r ../requirements.txt").on("error", (error: any) => {
+  log("Started installing the requirements");
+  // install the packages needed for recognizer
+  exec(
+    `${join(__dirname, "../venv/Scripts/pip")} install -r ${join(
+      __dirname,
+      "../requirements.txt"
+    )}`
+  ).on("error", (error: any) => {
     log("Error while installing requirements");
     vscode.window.showErrorMessage(
       `Can't install requirements file - ${error}`
@@ -94,12 +103,35 @@ export function installRequirements() {
 
 export function setupVirtualEnvironment() {
   let runSuccess: boolean = true;
-  exec("py -m venv venv").on("error", (error: any) => {
-    log("Error while creating virtual environment");
-    vscode.window.showErrorMessage(
-      `Can't create virtual environment - ${error}`
-    );
-    runSuccess = false;
-  });
-  return runSuccess;
+
+  if (!existsSync(join(__dirname, "../venv/Scripts/python.exe"))) {
+    exec("python -m venv venv").on("error", (error: any) => {
+      log("Error while creating virtual environment");
+      vscode.window.showErrorMessage(
+        `Can't create virtual environment - ${error}`
+      );
+      runSuccess = false;
+    });
+
+    if (runSuccess) {
+      vscode.window.showInformationMessage(
+        "Successfully created the virtual environment!"
+      );
+
+      installRequirements();
+      log("Successfully installed required packages for recognizer");
+    }
+  } else {
+    log("Virtual environment already exists");
+    vscode.window.showInformationMessage("Virtual environment already exists");
+  }
+}
+
+export function startRecognizer() {
+  recognizer = new RecognizerRunner();
+
+  let runStatus = recognizer.runRecognizer();
+  statusBarObj.startListening();
+  
+  return runStatus;
 }
