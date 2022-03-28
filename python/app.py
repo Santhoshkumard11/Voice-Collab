@@ -4,7 +4,7 @@ import asyncio
 import websockets
 import json
 from utils import setup_logging, execute_command
-
+import os
 
 # Initialize the recognizer
 recognizer_obj: sr.Recognizer = sr.Recognizer()
@@ -26,11 +26,11 @@ async def sender(ws: websockets):
 
                 logging.info(f"Recognized text - {recognized_text}")
 
-                if recognized_text.find("stop command mode") is not -1:
-                    logging.info("Exiting - user command")
+                if recognized_text.find("stop command mode") != -1:
+                    logging.info("Closing voice recognizer - user command")
                     await ws.close(3002, "user command - closing connection")
                     await ws.wait_closed()
-                    exit()
+                    os._exit(0)
 
                 execute_command(recognized_text)
 
@@ -39,10 +39,10 @@ async def sender(ws: websockets):
                     await ws.send(payload)
 
         except KeyboardInterrupt:
-            logging.warning("Exiting from keyboard interrupt")
+            logging.warning("Closing voice recognizer from keyboard interrupt")
             await ws.close(3001, "User command - Keyboard Interrupt")
             await ws.wait_closed()
-            exit()
+            os._exit(0)
 
         except sr.RequestError:
             logging.exception("Could not request results")
@@ -64,7 +64,6 @@ async def handler(ws):
 async def main():
 
     setup_logging()
-
     async with websockets.serve(handler, "localhost", 8001):
         await asyncio.Future()
 

@@ -60,6 +60,7 @@ function deactivateVoice() {
     exports.ws.close();
     utils_2.recognizer.killRecognizer();
     extension_1.GlobalVars.recognizerActive = false;
+    vscode.window.showInformationMessage("Voice Collab is deactivated!");
 }
 exports.deactivateVoice = deactivateVoice;
 //# sourceMappingURL=audio_capture.js.map

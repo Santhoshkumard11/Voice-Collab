@@ -53,7 +53,7 @@ export function activateVoice() {
     statusBarObj.stopListening();
     recognizer.killRecognizer();
     GlobalVars.recognizerActive = false;
-    vscode.window.showInformationMessage("Voice Recognition server stopped!")
+    vscode.window.showInformationMessage("Voice Recognition server stopped!");
   };
 }
 
@@ -63,4 +63,5 @@ export function deactivateVoice() {
   ws.close();
   recognizer.killRecognizer();
   GlobalVars.recognizerActive = false;
+  vscode.window.showInformationMessage("Voice Collab is deactivated!");
 }
