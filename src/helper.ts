@@ -7,6 +7,7 @@ let commands = ["git push"];
 export function executeCommand(recognizedText: string) {
   if (recognizedText.trim() === "git push") {
     log(`Extension executing command - ${recognizedText}`);
+    // @ts-ignore
     let currentPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
     exec(`git --git-dir= ${currentPath} push`).on("error", (error: any) => {
       log(`Error while executing the script ${error}`);
