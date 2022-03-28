@@ -2,6 +2,10 @@ import os
 import webbrowser
 import logging
 import inspect
+import ctypes
+import random
+from _constants import PROGRAMMER_STROY, PROGREAMMER_MEME
+from azure import send_post_request
 
 
 def current_method_name():
@@ -57,7 +61,50 @@ def create_requirement_file(command_text: str):
     try:
         execute_on_shell(command_text)
     except Exception:
-        logging.exception(f"func | {current_method_name()} | Error while trying to create requirements.txt files.")
+        logging.exception(
+            f"func | {current_method_name()} | Error while trying to create requirements.txt files."
+        )
         command_success = False
 
     return command_success, ""
+
+
+def commit_code():
+    os.system("git commit -am will it edit later")
+
+
+def push_code():
+    os.system("git push")
+
+
+def lock_screen():
+    ctypes.windll.user32.LockWorkStation()
+
+
+def temp_commit_lock_screen():
+    commit_code()
+    lock_screen()
+
+
+def send_email(email_id: str):
+    url = "https://graph.microsoft.com/v1.0/me/sendMail"
+    email_template = {
+        "message": {
+            "subject": "",
+            "body": {"contentType": "Text", "content": ""},
+            "toRecipients": [{"emailAddress": {"address": ""}}],
+        }
+    }
+
+    response = send_post_request(url, email_template, "graph_api")
+
+
+def crack_joke():
+    choice = random.randint(0, len(PROGREAMMER_MEME) - 1)
+    return True, [PROGREAMMER_MEME[choice]]
+
+
+def tell_a_story():
+    choice = random.randint(0, len(PROGRAMMER_STROY) - 1)
+
+    return True, [PROGRAMMER_STROY[choice]]

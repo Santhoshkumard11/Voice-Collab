@@ -42,13 +42,16 @@ class RecognizerRunner {
     }
     runRecognizer() {
         if (this.sysType.startsWith("win")) {
-            this.child = this.execFile((0, path_1.join)(__dirname, "../venv/Scripts/python.exe"), [(0, path_1.join)(__dirname, "../python/app.py")]);
+            this.child = this.execFile((0, path_1.join)(__dirname, "../venv/Scripts/python.exe"), [(0, path_1.join)(__dirname, "../python_scripts/app.py")]);
         }
         this.child.stdout.on("data", (data) => {
             (0, exports.log)(`Data from Recognizer - ${data.toString()}`);
         });
         this.child.stderr.on("data", (data) => {
             console.log(`Recognizer - ${data.toString()}`);
+            if (data.toString().startsWith("Traceback ")) {
+                this.showError(data.toString());
+            }
         });
         return this.setupSuccess;
     }

@@ -59,7 +59,7 @@ export class RecognizerRunner {
     if (this.sysType.startsWith("win")) {
       this.child = this.execFile(
         join(__dirname, "../venv/Scripts/python.exe"),
-        [join(__dirname, "../python/app.py")]
+        [join(__dirname, "../python_scripts/app.py")]
       );
     }
     this.child.stdout.on("data", (data: Buffer) => {
@@ -68,6 +68,9 @@ export class RecognizerRunner {
 
     this.child.stderr.on("data", (data: any) => {
       console.log(`Recognizer - ${data.toString()}`);
+      if (data.toString().startsWith("Traceback ")) {
+        this.showError(data.toString());
+      }
     });
 
     return this.setupSuccess;

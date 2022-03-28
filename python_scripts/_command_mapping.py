@@ -1,6 +1,4 @@
-import os
-
-DOMAIN_NAME = os.getenv("DOMAIN_NAME")
+from _constants import MSFT_ACCOUNT_NAME_LIST
 
 COMMAND_DETAILS: dict = {
     1: {
@@ -66,37 +64,69 @@ COMMAND_DETAILS: dict = {
         "args": ["all"],
         "kargs": {},
     },
+    9: {
+        "method_name": "push_code",
+        "description": "Push the code to remote",
+        "success_message": "Successfully pushed the code to remote",
+        "failure_message": "Failed to push the code to remote",
+        "add_args": False,
+        "args": [],
+        "kargs": {},
+    },
+    10: {
+        "method_name": "temp_commit_lock_screen",
+        "description": "Commit code and lock the screen",
+        "success_message": "Successfully commted the code",
+        "failure_message": "Failed to commit the code",
+        "add_args": False,
+        "args": [],
+        "kargs": {},
+    },
+    11: {
+        "method_name": "lock_screen",
+        "description": "Lock the screen",
+        "success_message": "Locked the screen",
+        "failure_message": "Failed to lock the screen",
+        "add_args": False,
+        "args": [],
+        "kargs": {},
+    },
+    12: {
+        "method_name": "crack_joke",
+        "description": "crack a radom programmer joke",
+        "success_message": "{}",
+        "speak_args": True,
+        "add_args": False,
+        "args": [],
+        "kargs": {},
+    },
+    13: {
+        "method_name": "tell_a_story",
+        "description": "Narrate a radom programmer story",
+        "success_message": "{}",
+        "failure_message": "{}",
+        "speak_args": True,
+        "add_args": False,
+        "args": [],
+        "kargs": {},
+    },
 }
 
 COMMAND_MAPPINGS: dict = {
     1: ["start build", "trigger build pipeline"],
     2: ["create requirements.txt", "create requirements file"],
     3: ["get total pipeline runs"],
-    4: [],  # dynamic addition
-    5: [],  # dynamic addition
-    6: [],  # dynamic addition
+    4: [],  # dynamic addition calling someone
+    5: [],  # dynamic addition open email
+    6: [],  # dynamic addition open teams chat
     7: ["show help", "help", "what are the commands I can use"],
     8: ["help more", "list all the commands I can use"],
+    9: ["git push", "push code"],
+    10: ["taking a break", "break time"],
+    11: ["lock screen"],
+    12: ["crack a joke", "joke about programmers", "make me feel better"],
+    13: ["tell a story", "story time"]
 }
-
-# Microsoft Accounts
-MSFT_ACCOUNT_NAME_LIST: list = [
-    {
-        "name": "Alex",
-        "id": "329420-2384932-234832-24324",
-        "email": f"AlexW{DOMAIN_NAME}",
-    },
-    {
-        "name": "Grady",
-        "id": "4985739-485692-958749-6847989",
-        "email": f"GradyA{DOMAIN_NAME}",
-    },
-    {
-        "name": "Megan",
-        "id": "84898795-238779-9457-459964",
-        "email": f"MeganB{DOMAIN_NAME}",
-    },
-]
 
 
 def add_msft_account_to_commands():

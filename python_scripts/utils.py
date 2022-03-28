@@ -2,8 +2,8 @@ import logging
 import coloredlogs
 import sys
 from _command_mapping import COMMAND_MAPPINGS, COMMAND_DETAILS, MSFT_ACCOUNT_NAME_LIST
-from _helper import create_requirement_file, open_mail, call_on_teams, open_teams_chat
-from azure import get_total_pipeline_runs, trigger_pipeline_run
+from _helper import *
+from azure import *
 import pyttsx3
 from typing import Callable
 
@@ -32,18 +32,16 @@ def show_help(content):
     """
     command_success = True
     try:
-        total_commands_counter = 0
+        total_commands_counter = len(list(COMMAND_DETAILS.items()))
         commands_text = "Here are some commands that you can use, "
         if content == "all":
             for id, (_, command_info) in enumerate(COMMAND_DETAILS.items()):
                 if command_info.get("method_name").find("help") == -1:
                     commands_text += f". {command_info.get('description')}."
-                    total_commands_counter += 1
         else:
             for id, (_, command_info) in enumerate(COMMAND_DETAILS.items()):
                 if command_info.get("method_name").find("help") == -1:
                     commands_text += f"{command_info.get('description')}, "
-                    total_commands_counter += 1
                 if id == 5:
                     break
 
@@ -94,6 +92,15 @@ def get_persons_email(recognized_text: str):
             return account.get("email")
 
 
+def add_args_to_command_info(recognized_text: str):
+    result_args_list = []
+    email_id = get_persons_email(recognized_text)
+    if email_id:
+        result_args_list.append(email_id)
+
+    return result_args_list
+
+
 def get_command_details(recognized_text: str):
     """Try mapping the recognized text with one of the command in the mapping list
 
@@ -108,10 +115,7 @@ def get_command_details(recognized_text: str):
             if recognized_text.find(search_string.lower()) != -1:
                 command_info = COMMAND_DETAILS.get(command_id)
                 if command_info.get("add_args"):
-                    email_id = get_persons_email(recognized_text)
-                    if not email_id:
-                        return
-                    command_info["args"] = [email_id]
+                    command_info["args"] = add_args_to_command_info(recognized_text)
 
                 return command_info
 
@@ -143,7 +147,7 @@ def execute_command(recognized_text: str):
             if command_success
             else command_info.get("failure_message")
         )
-        if command_info.get("speak_args") and command_success is not False:
+        if command_info.get("speak_args") and command_success:
             text_to_speak = text_to_speak.format(*speak_args)
 
         if text_to_speak:
