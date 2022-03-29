@@ -110,10 +110,20 @@ COMMAND_DETAILS: dict = {
         "args": [],
         "kargs": {},
     },
+    14: {
+        "method_name": "get_chatbot_response",
+        "description": "Chat with sandy",
+        "success_message": "{}",
+        "failure_message": "{}",
+        "speak_args": True,
+        "add_args": True,
+        "args": [],
+        "kargs": {},
+    }
 }
 
 COMMAND_MAPPINGS: dict = {
-    1: ["start build", "trigger build pipeline"],
+    1: ["start build", "trigger pipeline build"],
     2: ["create requirements.txt", "create requirements file"],
     3: ["get total pipeline runs"],
     4: [],  # dynamic addition calling someone
@@ -126,6 +136,7 @@ COMMAND_MAPPINGS: dict = {
     11: ["lock screen"],
     12: ["crack a joke", "joke about programmers", "make me feel better"],
     13: ["tell a story", "story time"],
+    14: ["hey sandy", "sandy"]
 }
 
 

@@ -38,7 +38,7 @@ The first student responds, Good choice!  Her clothes probably wouldn't have fit
 PROGREAMMER_MEME = [
     "Two bytes meet. The first byte asks, Are you ill? The second byte replies, No, just feeling a bit off.",
     "Eight bytes walk into a bar. The bartender asks, Can I get you anything? Yeah, reply the bytes. Make us a double.",
-    "The three most dangerous things in the world are a programmer with a soldering iron, a hardware engineer with a software patch, and a user with an idea. The Wizardry Compiled by Rick Cook",
+    "The three most dangerous things in the world are a programmer with a soldering iron, a hardware engineer with a software patch, and a user with an idea.",
     "I just saw my life flash before my eyes and all I could see was a close tag…",
     "The generation of random numbers is too important to be left to chance.",
     "Have you heard about the new Cray super computer?  Its so fast, it executes an infinite loop in 6 seconds.",

@@ -4,7 +4,16 @@ import logging
 import inspect
 import ctypes
 import random
+import openai
 from _constants import PROGRAMMER_STROY, PROGREAMMER_MEME
+from dotenv import load_dotenv
+
+load_dotenv()
+
+temp_email_template = None
+PHRASES_TO_REMOVE = ["hey sandy", "sandy"]
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def current_method_name():
@@ -73,6 +82,7 @@ def commit_code():
 
 
 def push_code():
+    # since we're not sure where the path of the git folder is we execute this in Typescript
     # os.system("git push")
     return True, []
 
@@ -87,17 +97,50 @@ def temp_commit_lock_screen():
     lock_screen()
 
 
-# def send_email(email_id: str):
-#     url = "https://graph.microsoft.com/v1.0/me/sendMail"
-#     email_template = {
-#         "message": {
-#             "subject": "",
-#             "body": {"contentType": "Text", "content": ""},
-#             "toRecipients": [{"emailAddress": {"address": ""}}],
-#         }
-#     }
+def create_email(email_id: str, subject: str, content: str):
+    global temp_email_template
 
-#     response = send_post_request(url, email_template, "graph_api")
+    temp_email_template = {
+        "message": {
+            "subject": subject,
+            "body": {"contentType": "Text", "content": content},
+            "toRecipients": [{"emailAddress": {"address": email_id}}],
+        }
+    }
+
+    with open("temp_email.txt", "w") as file:
+        file.write(f"Subject - {subject}.\n")
+        file.write(f"Body - {content}.\n")
+        file.write(f"Email ID - {email_id}.\n")
+
+
+def narrate_create_email():
+    global temp_email_template
+
+    subject = f"Subject - {temp_email_template.get('message').get('subject')}."
+    body = f"Body - {temp_email_template.get('message').get('body').get('content')}."
+    email_id = f"""Email address -  {temp_email_template.get('message').get(
+        'toRecipients'
+    )[0].get('emailAddress')}."""
+
+    return f"Draft email, {subject} {body} {email_id}"
+
+
+def delete_email_content():
+    global temp_email_template
+
+    temp_email_template = None
+
+
+def confirm_send_email():
+    from utils import send_post_request
+
+    global temp_email_template
+    url = "https://graph.microsoft.com/v1.0/me/sendMail"
+    if not temp_email_template:
+        return False, "Create an email to send"
+
+    response = send_post_request(url, temp_email_template, "graph_api")
 
 
 def crack_joke():
@@ -109,3 +152,46 @@ def tell_a_story():
     choice = random.randint(0, len(PROGRAMMER_STROY) - 1)
 
     return True, [PROGRAMMER_STROY[choice]]
+
+
+def cleanse_recognized_text(uncleaned_text: str, phrases: list):
+
+    for phrase in phrases:
+        cleansed_text = uncleaned_text.replace(phrase, "")
+        cleansed_text = cleansed_text.strip()
+    return cleansed_text
+
+
+def cleanse_openai_response(uncleaned_text: str):
+    filter = "".join([chr(i) for i in range(1, 32)])
+    return uncleaned_text.translate(str.maketrans("", "", filter))
+
+
+def get_chatbot_response(recognized_text: str):
+
+    request_status, response_text = False, ""
+
+    clean_recognized_text = cleanse_recognized_text(recognized_text, PHRASES_TO_REMOVE)
+
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=clean_recognized_text,
+            temperature=0.5,
+            max_tokens=60,
+            top_p=0.3,
+            frequency_penalty=0.5,
+            presence_penalty=0,
+        )
+    except Exception:
+        logging.exception(
+            f"func | {current_method_name()} | Error while trying to call the openai API"
+        )
+
+    if response:
+        request_status = True
+        response_text = response["choices"][0]["text"]
+        response_text = cleanse_openai_response(response_text)
+        logging.info(f"OpenAI API - {response_text}")
+
+    return request_status, [response_text]

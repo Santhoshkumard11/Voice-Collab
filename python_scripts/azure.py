@@ -3,6 +3,9 @@ import requests
 import json
 import logging
 import inspect
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ORGANIZATION = "sandy-codes-py"
 PROJECT = "Voice-Collab"
@@ -29,6 +32,7 @@ def send_post_request(url: str, data={}, api_name="DevOps"):
     """
 
     if api_name == "graph_api":
+        logging.info("Sending post request to Microsoft Graph API")
         return requests.post(
             url,
             data=json.dumps(data),
@@ -38,6 +42,7 @@ def send_post_request(url: str, data={}, api_name="DevOps"):
             },
         )
     else:
+        logging.info("Sending post request to Azure DevOps API")
         return requests.post(
             url,
             data=json.dumps(data),
@@ -73,6 +78,7 @@ def trigger_pipeline_run():
         if response.status_code == 200:
             logging.info("Build started successfully")
         else:
+            logging.warn(f"failed to trigger - {response.status_code}")
             command_success = False
     except Exception:
         logging.exception(f"func | {current_method_name()} | See the below error")
@@ -155,7 +161,7 @@ def last_pipeline_status():
 
 
 # def get_high_important_mails():
-#     url = "https://graph.microsoft.com/v1.0/me/messages?$filter=importance eq 'high'"
+#     url = "https://graph.microsoft.com/v1.0/me/messages?$filter=importance+eq+%27high%27&$skip=10"
 
 
 # def get_mentioned_emails():

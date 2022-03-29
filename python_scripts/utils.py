@@ -92,11 +92,27 @@ def get_persons_email(recognized_text: str):
             return account.get("email")
 
 
+def check_chatbot_command(recognized_text: str):
+
+    bot_initiations = PHRASES_TO_REMOVE
+
+    for command in bot_initiations:
+        if recognized_text.find(command) != -1:
+            return True
+
+    return False
+
+
 def add_args_to_command_info(recognized_text: str):
     result_args_list = []
+    # this adds email_id to the args
     email_id = get_persons_email(recognized_text)
     if email_id:
         result_args_list.append(email_id)
+
+    # this adds the recognized text to the args
+    if check_chatbot_command(recognized_text):
+        result_args_list.append(recognized_text)
 
     return result_args_list
 
