@@ -55,6 +55,13 @@ export class RecognizerRunner {
   }
 
   runRecognizer(): boolean {
+    // not using the below since we have variable in .env file and will load that in Python scripts
+    // log(
+    //   // @ts-ignore
+    //   `Extension Dir - ${__dirname}\nWorkspace Dir ${vscode.workspace.workspaceFolders[0].uri.fsPath}`
+    // );
+    // exec(`& ${join(__dirname, "../venv/Scripts/Activate.ps1")}`);
+
     if (this.sysType.startsWith("win")) {
       this.child = this.execFile(
         join(__dirname, "../venv/Scripts/python.exe"),
@@ -134,13 +141,11 @@ export function startRecognizer() {
 
   let runStatus = recognizer.runRecognizer();
   statusBarObj.startListening();
-  
+
   return runStatus;
 }
 
-
-export function stopRecognizer()
-{
+export function stopRecognizer() {
   recognizer.killRecognizer();
   log("Killed voice recognizer!");
 }

@@ -4,7 +4,7 @@ export let ws: WebSocket;
 import { statusBarObj, GlobalVars } from "./extension";
 import { recognizer } from "./utils";
 import * as vscode from "vscode";
-import { executeCommand } from "./helper";
+import { mapCommand } from "./helper";
 
 export function activateVoice() {
   log("Voice mode activated!");
@@ -33,7 +33,7 @@ export function activateVoice() {
     const transcript = received.message;
     if (transcript) {
       log("server - " + transcript);
-      executeCommand(transcript);
+      mapCommand(transcript);
     }
   };
 
