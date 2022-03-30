@@ -145,7 +145,7 @@ def delete_email_content():
     temp_email_template = None
 
 
-def confirm_send_email():
+def send_email():
     from utils import send_post_request
 
     global temp_email_template

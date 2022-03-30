@@ -9,6 +9,7 @@ COMMAND_DETAILS: dict = {
         "add_args": False,
         "args": [],
         "kargs": {},
+        "speak_args": True,
     },
     2: {
         "method_name": "create_requirement_file",
@@ -18,6 +19,7 @@ COMMAND_DETAILS: dict = {
         "success_message": "Successfully created requirements file",
         "failure_message": "Failed to create requirements file",
         "add_args": False,
+        "speak_args": True,
     },
     3: {
         "method_name": "get_total_pipeline_runs",
@@ -52,14 +54,14 @@ COMMAND_DETAILS: dict = {
     },
     7: {
         "method_name": "show_help",
-        "description": "help",
+        "description": "Speak out 5 commands you can use",
         "add_args": False,
         "args": [""],
         "kargs": {},
     },
     8: {
         "method_name": "show_help",
-        "description": "help",
+        "description": "Speak out all the commands you can use",
         "add_args": False,
         "args": ["all"],
         "kargs": {},
@@ -93,7 +95,7 @@ COMMAND_DETAILS: dict = {
     },
     12: {
         "method_name": "crack_joke",
-        "description": "crack a radom programmer joke",
+        "description": "crack a random programmer joke",
         "success_message": "{}",
         "speak_args": True,
         "add_args": False,
@@ -102,7 +104,7 @@ COMMAND_DETAILS: dict = {
     },
     13: {
         "method_name": "tell_a_story",
-        "description": "Narrate a radom programmer story",
+        "description": "Narrate a random programmer story",
         "success_message": "{}",
         "failure_message": "{}",
         "speak_args": True,

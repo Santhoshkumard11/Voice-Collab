@@ -91,6 +91,7 @@ export class RecognizerRunner {
   killRecognizer() {
     // stop the recognizer - python server
     this.child.kill("SIGTERM");
+    statusBarObj.stopListening();
   }
 }
 
@@ -148,4 +149,5 @@ export function startRecognizer() {
 export function stopRecognizer() {
   recognizer.killRecognizer();
   log("Killed voice recognizer!");
+  statusBarObj.stopListening();
 }

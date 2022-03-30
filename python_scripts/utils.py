@@ -130,7 +130,7 @@ def get_command_details(recognized_text: str):
         for search_string in search_string_list:
             if recognized_text.find(search_string.lower()) != -1:
                 command_info = COMMAND_DETAILS.get(command_id)
-                if command_info.get("add_args"):
+                if command_info.get("add_args") and len(command_info.get("args")) == 0:
                     command_info["args"] = add_args_to_command_info(recognized_text)
 
                 return command_info
