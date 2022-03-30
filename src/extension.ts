@@ -13,19 +13,23 @@ export class GlobalVars {
 }
 
 export function activate(context: vscode.ExtensionContext) {
+  /** This is executed when the user activated or installs the extension */
+
   log("Voice Collab extension is now active!");
+
+  // initialize the status bar item
   statusBarObj = new StatusBarItem();
 
   vscode.commands.registerCommand("voice.notification", () => {
-    // send a notification to the user - like a test notification
+    // send a notification to the user - a test notification
     log("Just a notification");
 
     vscode.window.showInformationMessage("Enjoy with Voice Collab!");
   });
 
+  // create a WebSocket connection to the voice recognition server
   vscode.commands.registerCommand("voice.activate_voice", () => {
-    // this opens up the websocket connection for voice recognition
-    // check if the server is running before running this
+    // check if the server is running
     if (GlobalVars.recognizerActive) {
       activateVoice();
       vscode.window.showInformationMessage("Voice recognition activated!");
@@ -39,8 +43,8 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
+  // this creates the virtual environment
   vscode.commands.registerCommand("voice.setup_environment", () => {
-    // this opens up the websocket connection for voice recognition
     if (!GlobalVars.recognizerActive) {
       setupVirtualEnvironment();
     } else {
@@ -50,9 +54,8 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
+  // this starts the voice recognition server
   vscode.commands.registerCommand("voice.start_recognizer_server", () => {
-    // this opens up the websocket connection for voice recognition
-
     let runSuccess = startRecognizer();
 
     if (runSuccess) {
@@ -66,12 +69,22 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
+  // this closes the websocket connection
   vscode.commands.registerCommand("voice.deactivate_voice", () => {
-    // this closes the websocket connection
-
-    deactivateVoice();
+    
+    // check if the server is running
+    if (GlobalVars.recognizerActive) {
+      deactivateVoice();
+    } else {
+      vscode.window.showErrorMessage(
+        "Voice recognition server is not running!"
+      );
+      log("Voice recognition server is not running!");
+    }
     vscode.window.showInformationMessage("Voice recognition deactivate!");
   });
+
+  // Soft terminate the voice recognition server
   vscode.commands.registerCommand("voice.stop_recognizer", () => {
     stopRecognizer();
     vscode.window.showInformationMessage("Voice recognizer stopped!");
@@ -79,6 +92,8 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
+  /** This executed when the extension is disabled by the user*/
+
   deactivateVoice();
   vscode.window.showInformationMessage("Voice Collab is deactivated!");
 }

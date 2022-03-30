@@ -5,8 +5,9 @@ import * as vscode from "vscode";
 let commands = ["git push"];
 let codexCommands = ["hey codex", "codex", "hey codecs", "codecs"];
 
-// execute the command if it matches one of the connections below
 export function mapCommand(recognizedText: string) {
+  /** Execute the command if it matches one of the connections below. */
+
   if (recognizedText.trim() === "git push") {
     log(`Extension executing command - ${recognizedText}`);
 
@@ -22,11 +23,16 @@ export function mapCommand(recognizedText: string) {
       .trim()
       .replace("+", "");
     log(`Extension executing command - ${recognizedText}`);
+
     insertTextToEditor(recognizedText);
   }
 }
+
 function insertTextToEditor(text: string) {
+  /** Insert the text to the currently activate editor. */
+
   const editor = vscode.window.activeTextEditor;
+
   // check if we have an active editor
   if (editor) {
     editor.edit((editBuilder) => {
@@ -36,11 +42,13 @@ function insertTextToEditor(text: string) {
 }
 
 function executeCommand(command: string) {
+  /** Execute the command. */
   exec(command).on("error", (error: any) => {
-    log(`Error while executing the script ${error}`);
+    log(`Error while executing the command - ${command} - error - ${error}`);
   });
 }
 
+// work in progress
 function checkIfCommandExists(recognizedText: string) {
   for (let command of codexCommands) {
     if (recognizedText.includes(command)) {
