@@ -7,7 +7,9 @@ from azure import *
 import pyttsx3
 from typing import Callable
 
+# setup the text to speech engine
 engine: pyttsx3.Engine = pyttsx3.init()
+# rate at which you want the bot to talk
 engine.setProperty("rate", 125)
 voices = engine.getProperty("voices")
 engine.setProperty("voice", voices[1].id)
@@ -24,21 +26,27 @@ def speak_out(text: str):
     engine.runAndWait()
 
 
-def show_help(content):
+def show_help(mode):
     """Speak out the commands that the users can perform
 
     Args:
-        content (str): how many to show
+        mode (str): how many to show
+
+    Returns:
+        bool, str: method status, aggregated text from command description
     """
+
     command_success = True
     try:
         total_commands_counter = len(list(COMMAND_DETAILS.items()))
         commands_text = "Here are some commands that you can use, "
-        if content == "all":
+        # get all the commands from the list
+        if mode == "all":
             for id, (_, command_info) in enumerate(COMMAND_DETAILS.items()):
                 if command_info.get("method_name").find("help") == -1:
                     commands_text += f". {command_info.get('description')}."
         else:
+            # get only the top 6 commands from the list
             for id, (_, command_info) in enumerate(COMMAND_DETAILS.items()):
                 if command_info.get("method_name").find("help") == -1:
                     commands_text += f"{command_info.get('description')}, "
@@ -50,6 +58,7 @@ def show_help(content):
         complete_sentense = text + commands_text
         logging.info(f"This is help - {complete_sentense}")
         speak_out(complete_sentense)
+
     except Exception:
         logging.exception("func | show_help | See the below error ")
         command_success = False
@@ -68,10 +77,11 @@ def setup_logging():
     loghandler = logging.StreamHandler(sys.stdout)
     formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
     loghandler.setFormatter(formatter)
-    logging.basicConfig(level=logging.DEBUG, handlers=[loghandler])
+    logging.basicConfig(level=logging.INFO, handlers=[loghandler])
     logging.info("Starting to log things..")
 
 
+# work in progress
 def advanced_command_matching():
     """User some sort of algo/flow to match the recognized text with the commands we already have"""
     pass
@@ -93,10 +103,16 @@ def get_persons_email(recognized_text: str):
 
 
 def check_chatbot_command(recognized_text: str):
+    """Check if the command is for a chatbot
 
-    bot_initiations = BOT_INITIALIZE_COMMANDS
+    Args:
+        recognized_text (str): recognized text from the user
 
-    for command in bot_initiations:
+    Returns:
+        bool: True if it's a command else False
+    """
+
+    for command in BOT_INITIALIZE_COMMANDS:
         if recognized_text.find(command) != -1:
             return True
 
@@ -104,6 +120,15 @@ def check_chatbot_command(recognized_text: str):
 
 
 def add_args_to_command_info(recognized_text: str):
+    """Add additional args to the command method
+
+    Args:
+        recognized_text (str): recognized text from user
+
+    Returns:
+        list[str]: args to be passed to the command method
+    """
+
     result_args_list = []
     # this adds email_id to the args
     email_id = get_persons_email(recognized_text)
@@ -121,15 +146,20 @@ def get_command_details(recognized_text: str):
     """Try mapping the recognized text with one of the command in the mapping list
 
     Args:
-        recognized_text (str): recognized test from user
+        recognized_text (str): recognized text from user
 
     Returns:
         dict: information about the command matched or None if nothing is matched
     """
+
     for command_id, search_string_list in COMMAND_MAPPINGS.items():
         for search_string in search_string_list:
+
+            # check if the text has an commands in it
             if recognized_text.find(search_string.lower()) != -1:
                 command_info = COMMAND_DETAILS.get(command_id)
+
+                # check if we need to add args to the command method
                 if command_info.get("add_args") and len(command_info.get("args")) == 0:
                     command_info["args"] = add_args_to_command_info(recognized_text)
 
@@ -140,8 +170,9 @@ def execute_command(recognized_text: str):
     """Get the recognized text and execute the corresponding command
 
     Args:
-        text (str): recognized text
+        text (str): recognized text from user
     """
+
     try:
         command_info: dict = get_command_details(recognized_text)
 
@@ -151,9 +182,11 @@ def execute_command(recognized_text: str):
             return
 
         method_name_str = command_info.get("method_name")
+
         logging.info(f"Command match found - {method_name_str}")
 
         method_name: Callable = globals()[method_name_str]
+
         command_success, speak_args = method_name(
             *command_info.get("args"), **command_info.get("kargs")
         )
@@ -163,11 +196,13 @@ def execute_command(recognized_text: str):
             if command_success
             else command_info.get("failure_message")
         )
+
         if command_info.get("speak_args") and command_success:
             text_to_speak = text_to_speak.format(*speak_args)
 
             if text_to_speak:
                 speak_out(text_to_speak)
+
         if command_info.get("send_code"):
             return "codex " + text_to_speak.format(*speak_args)
 

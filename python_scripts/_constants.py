@@ -1,3 +1,5 @@
+# this file has all the constant values needed for voice recognition server to response to the user requests
+
 MSFT_ACCOUNT_NAME_LIST = [
     {
         "name": "Alex",

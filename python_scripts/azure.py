@@ -7,15 +7,20 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# replace these values from your Azure DevOps account
 ORGANIZATION = "sandy-codes-py"
 PROJECT = "Voice-Collab"
 PIPELINE_ID = 1
 TEAM = "Voice-Collab%20Team"
 
-# GET_RUNS_URL = "https://dev.azure.com/sandy-codes-py/Voice-Collab/_apis/pipelines/1/runs?api-version=7.1-preview.1"
-
 
 def current_method_name():
+    """Returns the method name from where this method is called
+
+    Returns:
+        str: exact method name
+    """
+
     return inspect.stack()[1][3]
 
 
@@ -64,7 +69,7 @@ def send_get_request(url: str):
 
 
 def trigger_pipeline_run():
-    """Trigger the pipeline in Azure Devops
+    """Trigger a pipeline in Azure Devops
 
     Returns:
         bool, str: state and info
@@ -87,6 +92,7 @@ def trigger_pipeline_run():
     return command_success, ""
 
 
+# work in progress
 def total_backlog_items():
     url = f"https://dev.azure.com/{ORGANIZATION}/{PROJECT}/{TEAM}/_apis/work/backlogs?api-version=6.0-preview.1"
     print(url)
@@ -97,7 +103,7 @@ def total_backlog_items():
     print(len(result.items()))
 
 
-# not working
+# work in progress
 def get_total_work_items():
     url = "https://dev.azure.com/{ORGANIZATION}/{PROJECT}/_apis/wit/workitems?api-version=6.0"
     print(url)
@@ -109,7 +115,7 @@ def get_total_work_items():
 
 
 def get_total_pipeline_runs():
-    """Count the total builds of a pipeline
+    """Count the total builds of a pipeline in Azure DevOps
 
     Returns:
         bool, list[int]: the state of the response and the count of builds
@@ -129,26 +135,32 @@ def get_total_pipeline_runs():
     return command_success, [total_count]
 
 
+# work in progress
 def get_others_tickets():
     pass
 
 
+# work in progress
 def get_my_tickets():
     pass
 
 
+# work in progress
 def get_completed_tickets():
     pass
 
 
+# work in progress
 def get_sprint_time_left():
     pass
 
 
+# work in progress
 def last_pipeline_run_id(pipeline_list: list):
     pass
 
 
+# work in progress
 def last_pipeline_status():
 
     pipeline_list = get_total_pipeline_runs()
@@ -165,4 +177,4 @@ def last_pipeline_status():
 
 
 # def get_mentioned_emails():
-#     url = "https://graph.microsoft.com/beta/me/messages?$filter=mentionsPreview/isMentioned eq true&$select=subject,sender,receivedDateTime"
+#     url = "https://graph.microsoft.com/beta/me/messages?$filter=mentionsPreview/isMentioned%20eq%20true&$select=subject,sender,receivedDateTime"

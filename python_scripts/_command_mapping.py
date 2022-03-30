@@ -1,5 +1,8 @@
+# this file has all the commands and mapping that the voice recognizer is able to pick up and do some action
+
 from _constants import MSFT_ACCOUNT_NAME_LIST
 
+# this list contains all the details about a command
 COMMAND_DETAILS: dict = {
     1: {
         "method_name": "trigger_pipeline_run",
@@ -132,9 +135,10 @@ COMMAND_DETAILS: dict = {
         "send_code": True,
         "args": [],
         "kargs": {},
-    }
+    },
 }
 
+# these are the commands or keyboards that the recognizer picks up and matches them with the command details
 COMMAND_MAPPINGS: dict = {
     1: ["start build", "trigger pipeline build"],
     2: ["create requirements.txt", "create requirements file"],
@@ -150,13 +154,13 @@ COMMAND_MAPPINGS: dict = {
     12: ["crack a joke", "joke about programmers", "make me feel better"],
     13: ["tell a story", "story time"],
     14: ["hey sandy", "sandy"],
-    15: ["hey codex", "codex", "hey codecs", "codecs", "cortex"]
+    15: ["hey codex", "codex", "hey codecs", "codecs", "cortex"],
 }
 
 
 def add_msft_account_to_commands():
+    """adding users to the command mapping list"""
 
-    # adding members to the mapping list
     for account in MSFT_ACCOUNT_NAME_LIST:
         name = account.get("name")
 
