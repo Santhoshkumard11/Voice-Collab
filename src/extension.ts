@@ -80,5 +80,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() {
   deactivateVoice();
-  vscode.window.showInformationMessage("Thanks for using the extension.");
+  vscode.window.showInformationMessage("Voice Collab is deactivated!");
 }

@@ -5,13 +5,26 @@ import inspect
 import ctypes
 import random
 import openai
-from _constants import PROGRAMMER_STROY, PROGREAMMER_MEME
+from _constants import (
+    PROGRAMMER_STROY,
+    PROGREAMMER_MEME,
+    STR_TO_REMOVE_FROM_CHATBOT_RESPONSE,
+    STR_TO_REMOVE_FROM_CODEX_RESPONSE,
+)
 from dotenv import load_dotenv
 
 load_dotenv()
 
 temp_email_template = None
-PHRASES_TO_REMOVE = ["hey sandy", "sandy"]
+BOT_INITIALIZE_COMMANDS = [
+    "hey sandy",
+    "sandy",
+    "hey codex",
+    "codex",
+    "hey codecs",
+    "codecs",
+    "cortex ",
+]
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -154,6 +167,13 @@ def tell_a_story():
     return True, [PROGRAMMER_STROY[choice]]
 
 
+def replace_substring(text, mapping_dict: dict):
+    for search_string, replace_string in mapping_dict.items():
+        text = text.replace(search_string, replace_string)
+
+    return text
+
+
 def cleanse_recognized_text(uncleaned_text: str, phrases: list):
 
     for phrase in phrases:
@@ -162,26 +182,36 @@ def cleanse_recognized_text(uncleaned_text: str, phrases: list):
     return cleansed_text
 
 
-def cleanse_openai_response(uncleaned_text: str):
-    filter = "".join([chr(i) for i in range(1, 32)])
-    return uncleaned_text.translate(str.maketrans("", "", filter))
+def cleanse_openai_response(uncleaned_text: str, clean_type="chatbot"):
+    if clean_type == "chatbot":
+        return replace_substring(uncleaned_text, STR_TO_REMOVE_FROM_CHATBOT_RESPONSE)
+
+    if clean_type == "codex":
+        uncleaned_text = uncleaned_text[uncleaned_text.find("\n") + 1 :]
+        return "\n" + replace_substring(
+            uncleaned_text, STR_TO_REMOVE_FROM_CODEX_RESPONSE
+        )
 
 
 def get_chatbot_response(recognized_text: str):
 
     request_status, response_text = False, ""
 
-    clean_recognized_text = cleanse_recognized_text(recognized_text, PHRASES_TO_REMOVE)
+    clean_recognized_text = cleanse_recognized_text(
+        recognized_text, BOT_INITIALIZE_COMMANDS
+    )
+
+    clean_recognized_text += " ?\n"
 
     try:
         response = openai.Completion.create(
             engine="text-davinci-002",
             prompt=clean_recognized_text,
-            temperature=0.5,
-            max_tokens=60,
-            top_p=0.3,
-            frequency_penalty=0.5,
-            presence_penalty=0,
+            temperature=0.9,
+            max_tokens=24,
+            top_p=0.9,
+            frequency_penalty=0.54,
+            presence_penalty=0.67,
         )
     except Exception:
         logging.exception(
@@ -190,8 +220,41 @@ def get_chatbot_response(recognized_text: str):
 
     if response:
         request_status = True
+        logging.info(response)
         response_text = response["choices"][0]["text"]
         response_text = cleanse_openai_response(response_text)
+        logging.info(f"OpenAI API - {response_text}")
+
+    return request_status, [response_text]
+
+
+def generate_code(recognized_text):
+    request_status, response_text = False, ""
+
+    clean_recognized_text = cleanse_recognized_text(
+        recognized_text, BOT_INITIALIZE_COMMANDS
+    )
+    clean_recognized_text += "."
+    try:
+        response = openai.Completion.create(
+            engine="code-davinci-002",
+            prompt=clean_recognized_text,
+            temperature=0.19,
+            max_tokens=120,
+            top_p=0.27,
+            frequency_penalty=0.45,
+            presence_penalty=0.31,
+        )
+    except Exception:
+        logging.exception(
+            f"func | {current_method_name()} | Error while trying to call the openai API"
+        )
+
+    if response:
+        request_status = True
+        logging.info(response)
+        response_text = response["choices"][0]["text"]
+        response_text = cleanse_openai_response(response_text, clean_type="codex")
         logging.info(f"OpenAI API - {response_text}")
 
     return request_status, [response_text]

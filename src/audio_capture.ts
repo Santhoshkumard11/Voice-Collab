@@ -65,5 +65,4 @@ export function deactivateVoice() {
   ws.close();
   recognizer.killRecognizer();
   GlobalVars.recognizerActive = false;
-  vscode.window.showInformationMessage("Voice Collab is deactivated!");
 }

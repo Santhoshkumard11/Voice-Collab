@@ -43,3 +43,15 @@ PROGREAMMER_MEME = [
     "The generation of random numbers is too important to be left to chance.",
     "Have you heard about the new Cray super computer?  Its so fast, it executes an infinite loop in 6 seconds.",
 ]
+
+
+STR_TO_REMOVE_FROM_CHATBOT_RESPONSE = {
+    "\n": " ",
+    "Sandy:": " ",
+    "sandy:": " ",
+    "sandy": " ",
+    "Sandy": " ",
+    ":": ""
+}
+
+STR_TO_REMOVE_FROM_CODEX_RESPONSE = {"\n+": "\n"}

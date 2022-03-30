@@ -94,7 +94,7 @@ def get_persons_email(recognized_text: str):
 
 def check_chatbot_command(recognized_text: str):
 
-    bot_initiations = PHRASES_TO_REMOVE
+    bot_initiations = BOT_INITIALIZE_COMMANDS
 
     for command in bot_initiations:
         if recognized_text.find(command) != -1:
@@ -166,7 +166,10 @@ def execute_command(recognized_text: str):
         if command_info.get("speak_args") and command_success:
             text_to_speak = text_to_speak.format(*speak_args)
 
-        if text_to_speak:
-            speak_out(text_to_speak)
+            if text_to_speak:
+                speak_out(text_to_speak)
+        if command_info.get("send_code"):
+            return "codex " + text_to_speak.format(*speak_args)
+
     except Exception:
         logging.exception("An error occurred while trying to execute command")

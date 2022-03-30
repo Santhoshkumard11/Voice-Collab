@@ -32,7 +32,9 @@ async def sender(ws: websockets):
                     await ws.wait_closed()
                     os._exit(0)
 
-                execute_command(recognized_text)
+                text_to_send = execute_command(recognized_text)
+                if text_to_send:
+                    await ws.send(json.dumps({"message": text_to_send}))
 
                 if recognized_text:
                     payload = json.dumps({"message": recognized_text})

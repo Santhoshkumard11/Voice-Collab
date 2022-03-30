@@ -119,6 +119,17 @@ COMMAND_DETAILS: dict = {
         "add_args": True,
         "args": [],
         "kargs": {},
+    },
+    15: {
+        "method_name": "generate_code",
+        "description": "Generate Python code",
+        "success_message": "{}",
+        "failure_message": "{}",
+        "speak_args": False,
+        "add_args": True,
+        "send_code": True,
+        "args": [],
+        "kargs": {},
     }
 }
 
@@ -136,7 +147,8 @@ COMMAND_MAPPINGS: dict = {
     11: ["lock screen"],
     12: ["crack a joke", "joke about programmers", "make me feel better"],
     13: ["tell a story", "story time"],
-    14: ["hey sandy", "sandy"]
+    14: ["hey sandy", "sandy"],
+    15: ["hey codex", "codex", "hey codecs", "codecs", "cortex"]
 }
 
 
@@ -152,5 +164,3 @@ def add_msft_account_to_commands():
 
 
 add_msft_account_to_commands()
-
-# TODO: add other general chit chat stuff to the commands
