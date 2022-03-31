@@ -136,17 +136,22 @@ def create_requirement_file(command_text: str):
     Returns:
         bool, str: method status, empty string
     """
+    # since we're not sure where the path of the venv lives it's better if we execute this in Typescript
+    return True, ""
 
-    command_success = True
-    try:
-        execute_on_shell(command_text)
-    except Exception:
-        logging.exception(
-            f"func | {current_method_name()} | Error while trying to create requirements.txt files."
-        )
-        command_success = False
+    # command_success = True
+    # current_path = os.path.abspath(os.getcwd())
+    # command_text = os.path.join(current_path, command_text)
 
-    return command_success, ""
+    # try:
+    #     execute_on_shell(command_text)
+    # except Exception:
+    #     logging.exception(
+    #         f"func | {current_method_name()} | Error while trying to create requirements.txt files."
+    #     )
+    #     command_success = False
+
+    # return command_success, ""
 
 
 # work in progress
