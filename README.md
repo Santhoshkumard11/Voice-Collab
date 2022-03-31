@@ -1,14 +1,16 @@
 # Voice Collab 🔊 👨‍💻👩‍💻
+---
 [![](https://vsmarketplacebadge.apphb.com/version-short/sandy-codes-py.voice-collab.svg)](https://marketplace.visualstudio.com/items?itemName=sandy-codes-py.voice-collab)
 [![](https://vsmarketplacebadge.apphb.com/rating-short/sandy-codes-py.voice-collab.svg)](https://marketplace.visualstudio.com/items?itemName=sandy-codes-py.voice-collab) 
 [![Build Status](https://dev.azure.com/sandy-codes-py/Voice-Collab/_apis/build/status/Voice-Collab?branchName=main)](https://dev.azure.com/sandy-codes-py/Voice-Collab/_build/latest?definitionId=1&branchName=main)
 ![](https://vsmarketplacebadge.apphb.com/installs/sandy-codes-py.voice-collab.svg)
 [![License: MIT ](https://img.shields.io/github/license/mashape/apistatus.svg)](/LICENSE)
 
-
 ## Let's harness the power of voice to collaborate and interact with your code and the people you work with
 
-<p align="center"><img src="/media/voice-collab-gif.gif" alt="GIF" width="800" /></p>
+<p align="center">
+<img src="https://github.com/Santhoshkumard11/Voice-Collab/blob/bbe533486e4c9d3dd501437635f78e297ce32168/media/voice-collab-gif.gif" alt="GIF" width="800" />
+</p>
 
 ## 🔥 What it can do?
 
@@ -42,13 +44,35 @@ Create `.env` file inside `python_scripts` folder
 1. PERSONAL_ACCESS_TOKEN = "<paste your key>"
 2. OPENAI_API_KEY = "<paste your key>"
 
-Once you've set all the above them your good to go
+Once you've set all the above them your good to go 🏁
 
+## 🦾 Commands to invoke
+    Description - Trigger phrases
+    
+    1. Triggering Azure DevOps pipeline - say, start build or trigger pipeline build
+    2. Create the requirements.txt file - say, create requirements.txt or create requirements file
+    3. Get all Azure DevOps pipeline runs count - say, get total pipeline runs
+    4. Call someone on Microsoft Teams - say, call megan
+    5. Email someone on Outlook - say, email megan
+    6. Open up someones Microsoft Teams Chat - say, open megan's chat
+    7. Speak out 5 commands you can use - say, show help or  help or what are the commands I can use
+    8. Speak out all the commands you can use - say, help more or list all the commands I can use
+    9. Push the code to remote - say, git push or push code (still in progress)
+    10. Commit code and lock the screen - say, taking a break or break time
+    11. Lock the user screen - say, lock screen
+    12. Crack a random programmer joke - say, crack a joke or joke about programmers or make me feel better
+    13. Narrate a random story - say, tell a story or story time
+    14. Chat with Sandy - say, hey sandy or sandy and then say the phrase you wanna ask 
+        Example: I'm I the best programmer in the world?
+    15. Generate code - say, hey codex or codex and then say what you want 
+        Example: Create a Python class with name Employee, Create a Python dictionary with country and it's capitals
 
 ## 📌 FAQ
 - The speech recognition is done with **Google's free speech to text API** - get a paid API for smoother experience
 - Install PyAudio as `pipwin install pyaudio`, but first install pipwin as `pip install pipwin` - This is not needed but just in case
 - Open developer tools from Help> Toggle Developer Tools in VS Code to see the logs
+- You can add more people from your org into the `MSFT_ACCOUNT_NAME_LIST` in `_constants.py` file
+
 
 ## 💡 License
 
