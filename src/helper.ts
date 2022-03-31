@@ -1,9 +1,12 @@
 import { exec } from "child_process";
-import { log } from "./utils";
+import { installUserRequirements, log, setupUserVirtualEnvironment } from "./utils";
 import * as vscode from "vscode";
 
 let commands = ["git push"];
 let codexCommands = ["hey codex", "codex", "hey codecs", "codecs"];
+// @ts-ignore
+// this gives us the users working directory
+export let currentUserPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
 
 export function mapCommand(recognizedText: string) {
   /** Execute the command if it matches one of the connections below. */
@@ -11,10 +14,7 @@ export function mapCommand(recognizedText: string) {
   if (recognizedText.trim() === "git push") {
     log(`Extension executing command - ${recognizedText}`);
 
-    // @ts-ignore
-    // this gives us the users working directory
-    let currentPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    executeCommand(`git --git-dir= ${currentPath} push`);
+    executeCommand(`git --git-dir= ${currentUserPath} push`);
   }
 
   if (recognizedText.startsWith("codex")) {
@@ -25,6 +25,16 @@ export function mapCommand(recognizedText: string) {
     log(`Extension executing command - ${recognizedText}`);
 
     insertTextToEditor(recognizedText);
+  }
+
+  if (recognizedText.trim().includes("install requirements file")) {
+    log(`Extension executing command - ${recognizedText}`);
+    installUserRequirements();
+  }
+
+  if (recognizedText.trim().includes("setup virtual environment")) {
+    log(`Extension executing command - ${recognizedText}`);
+    setupUserVirtualEnvironment();
   }
 }
 

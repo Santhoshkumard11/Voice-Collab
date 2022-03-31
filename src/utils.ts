@@ -2,8 +2,10 @@ import * as vscode from "vscode";
 import { spawn, exec } from "child_process";
 import { platform } from "os";
 import { join } from "path";
-import { existsSync } from "fs";
+import { existsSync, readdirSync } from "fs";
 import { GlobalVars, statusBarObj } from "./extension";
+import { currentUserPath } from "./helper";
+let pipPackagePath = `${join(__dirname, "../venv/Lib/site-packages")}`;
 
 // get timestamp
 const timestamp = () => `[${new Date().toUTCString()}]`;
@@ -114,51 +116,126 @@ export class RecognizerRunner {
 
 export function installRequirements() {
   /** This installs the Python packages from the file. */
+  let methodStatus = true;
 
-  log("Started installing the requirements");
+  const pipPackageCount = readdirSync(pipPackagePath).length;
+  log(`There are a total of ${pipPackageCount} PIP packages`);
 
-  // install the packages needed for voice recognition server
-  exec(
-    `${join(__dirname, "../venv/Scripts/pip")} install -r ${join(
-      __dirname,
-      "../requirements.txt"
-    )}`
-  ).on("error", (error: any) => {
-    log("Error while installing requirements");
-    vscode.window.showErrorMessage(
-      `Can't install requirements file - ${error}`
-    );
-  });
+  // check if the PIP packages are installed 
+  if (pipPackageCount < 10) {
+    // install the packages needed for voice recognition server
+    log("Started installing the requirements");
+    exec(
+      `& "${join(__dirname, "../venv/Scripts/pip")}" install -r "${join(
+        __dirname,
+        "../requirements.txt"
+      )}"`
+    ).on("error", (error: any) => {
+      log("Error while installing requirements");
+
+      vscode.window.showErrorMessage(
+        `Can't install requirements file - ${error}`
+      );
+    });
+    methodStatus = false;
+  } else {
+    log("PIP packages are already installed!");
+
+    // vscode.window.showInformationMessage("PIP packages are already installed!");
+  }
+  return methodStatus;
 }
 
 export function setupVirtualEnvironment() {
   /** This creates a virtual environment for the voice recognition server. */
 
-  let runSuccess: boolean = true;
+  let methodStatus: boolean = true;
 
-    // check if a virtual environment exists
+  // check if a virtual environment exists
   if (!existsSync(join(__dirname, "../venv/Scripts/python.exe"))) {
-    
-    exec("python -m venv venv").on("error", (error: any) => {
-      log("Error while creating virtual environment");
-      vscode.window.showErrorMessage(
-        `Can't create virtual environment - ${error}`
-      );
+    exec(`python -m venv "${join(__dirname, "../venv")}"`).on(
+      "error",
+      (error: any) => {
+        log("Error while creating virtual environment");
+        vscode.window.showErrorMessage(
+          `Can't create virtual environment - ${error}`
+        );
 
-      runSuccess = false;
-    });
+        methodStatus = false;
+      }
+    );
 
-    if (runSuccess) {
-      vscode.window.showInformationMessage(
-        "Successfully created the virtual environment!"
-      );
-
-      installRequirements();
-      log("Successfully installed required packages for recognizer");
-    }
   } else {
     log("Virtual environment already exists");
-    vscode.window.showInformationMessage("Virtual environment already exists");
+    // vscode.window.showInformationMessage("Virtual environment already exists");
+  }
+  return methodStatus;
+}
+
+export function installUserRequirements() {
+  /** This installs the Python packages from the file. */
+
+  log("Started installing the requirements");
+  
+  const pipPackageCount = readdirSync(pipPackagePath).length;
+  let requirementFilePath = join(currentUserPath, "requirements.txt");
+
+  if (!existsSync(requirementFilePath) && pipPackageCount < 10) {
+    // install the packages needed for voice recognition server
+    exec(
+      `& "${join(
+        currentUserPath,
+        "venv/Scripts/pip"
+      )}" install -r "${requirementFilePath}"`
+    ).on("error", (error: any) => {
+      log("Error while installing requirements");
+
+      vscode.window.showErrorMessage(
+        `Can't install requirements file - ${error}`
+      );
+    });
+  } else {
+    log("No requirement.txt file found");
+
+    vscode.window.showErrorMessage(
+      "Need a requirement.txt file in the root directory"
+    );
+  }
+
+}
+
+export function setupUserVirtualEnvironment() {
+  /** This creates a virtual environment in the root dir. */
+
+  let runSuccess: boolean = true;
+  if (currentUserPath === "") {
+    
+
+    let venvPath = `"${join(currentUserPath, "venv")}"`;
+
+    // check if a virtual environment exists
+    if (!existsSync(join(currentUserPath, "venv/Scripts/python.exe"))) {
+      exec(`python -m venv ${venvPath}`).on("error", (error: any) => {
+        log("Error while creating virtual environment");
+
+        vscode.window.showErrorMessage(
+          `Can't create virtual environment - ${error}`
+        );
+
+        runSuccess = false;
+      });
+
+      if (runSuccess) {
+        log("Successfully created the virtual environment!");
+        vscode.window.showInformationMessage(
+          "Successfully created the virtual environment!"
+        );
+      }
+    } else {
+      log("Virtual environment already exists");
+
+      vscode.window.showInformationMessage("Virtual environment already exists");
+    }
   }
 }
 

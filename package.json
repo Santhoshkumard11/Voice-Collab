@@ -11,12 +11,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:voice.notification",
-		"onCommand:voice.activate_voice",
-		"onCommand:voice.deactivate_voice",
-		"onCommand:voice.start_recognizer_server",
-		"onCommand:voice.setup_environment",
-		"onCommand:voice.stop_recognizer"
+		"*"
 	],
 	"main": "./out/extension.js",
 	"icon": "media/icon.png",
@@ -53,11 +48,11 @@
 			},
 			{
 				"command": "voice.activate_voice",
-				"title": "Voice Collab: Activate"
+				"title": "Voice Collab: Connect to server"
 			},
 			{
 				"command": "voice.deactivate_voice",
-				"title": "Voice Collab: Deactivate"
+				"title": "Voice Collab: Disconnect from server"
 			},
 			{
 				"command": "voice.start_recognizer_server",
@@ -70,6 +65,10 @@
 			{
 				"command": "voice.stop_recognizer",
 				"title": "Voice Collab: Stop Voice Recognizer"
+			},
+			{
+				"command": "voice.install_requirements",
+				"title": "Voice Collab: Install requirements"
 			}
 		]
 	},

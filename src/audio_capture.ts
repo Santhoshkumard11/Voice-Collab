@@ -38,7 +38,7 @@ export function activateVoice() {
     const received = JSON.parse(message.data.toString());
     const transcript = received.message;
     if (transcript) {
-      log("server - " + transcript);
+      log("Transcript from server - " + transcript);
 
       // check if the received text is a command to be executed
       mapCommand(transcript);
