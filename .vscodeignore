@@ -9,5 +9,19 @@ __mocks__/**
 test/**
 **/*.spec.js
 .azure-pipelines/**
+vsc-extension-quickstart.md
 
-**/.env
+python_scripts/.env
+__snippet.ipynb
+__snippet.py
+
+__pycache__
+*.py[cod]
+*$py.class
+cython_debug/
+
+**.js.map
+**/test
+
+.gitignore
+.flake8
