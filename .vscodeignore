@@ -13,15 +13,17 @@ vsc-extension-quickstart.md
 
 python_scripts/.env
 __snippet.ipynb
-__snippet.py
+python_scripts/__snippet.py
 
-__pycache__
+**/__pycache__/**
 *.py[cod]
 *$py.class
 cython_debug/
 
-**.js.map
+out/*.js.map
+out/test/**
 **/test
+**/*.map
 
 .gitignore
 .flake8

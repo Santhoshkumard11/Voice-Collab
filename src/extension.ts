@@ -8,6 +8,7 @@ import {
   startRecognizer,
   stopRecognizer,
   installRequirements,
+  setupInitialEnvironment,
 } from "./utils";
 export let statusBarObj: StatusBarItem;
 export class GlobalVars {
@@ -25,29 +26,8 @@ export function activate(context: vscode.ExtensionContext) {
   statusBarObj = new StatusBarItem();
 
   // setup things needed for the voice recognition server to run
-  let setupSuccess: boolean = setupVirtualEnvironment();
-  let installSuccess: boolean = installRequirements();
-
-  if (setupSuccess && installSuccess)
-  {
-    vscode.window.showInformationMessage("✅ Voice recognition is all set to run!");
-    log("Voice recognition is all set to run!");
-  }
-  else if (!setupSuccess){
-    vscode.window.showInformationMessage("Unable to setup virtual environment in your system! Check manually and install it!");
-    log(
-      "Unable to setup virtual environment in your system! Check manually and install it!"
-    );
-  }
-  else if (!installSuccess){
-    vscode.window.showInformationMessage(
-      "Unable to install PIP packages in your system! Check manually and install it!"
-    );
-    log(
-      "Unable to install PIP packages in your system! Check manually and install it!"
-    );
-  }
-
+  setupInitialEnvironment();
+  
   context.subscriptions.push(
     vscode.commands.registerCommand("voice.notification", () => {
       // send a notification to the user - a test notification

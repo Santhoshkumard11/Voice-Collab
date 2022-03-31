@@ -11,7 +11,7 @@ let pipPackagePath = `${join(__dirname, "../venv/Lib/site-packages")}`;
 const timestamp = () => `[${new Date().toUTCString()}]`;
 // logging with current timestamp
 export const log = (...args: string[]) =>
-  console.log(timestamp(), " | ", ...args);
+  console.log(timestamp(), " | Voice Collab | ", ...args);
 export let recognizer: RecognizerRunner;
 
 export class StatusBarItem {
@@ -114,39 +114,86 @@ export class RecognizerRunner {
   }
 }
 
-export function installRequirements() {
+export async function setupInitialEnvironment() {
+  let setupSuccess: boolean = await setupVirtualEnvironment();
+  let installSuccess: boolean = await installRequirements();
+
+  if (setupSuccess && installSuccess) {
+    vscode.window.showInformationMessage(
+      "✅ Voice recognition is all set to run!"
+    );
+    log("Voice recognition is all set to run!");
+  } else if (!setupSuccess) {
+    vscode.window.showInformationMessage(
+      "Unable to setup virtual environment in your system! Check manually and install it!"
+    );
+    log(
+      "Unable to setup virtual environment in your system! Check manually and install it!"
+    );
+  } else if (!installSuccess) {
+    vscode.window.showInformationMessage(
+      "Unable to install PIP packages in your system! Check manually and install it!"
+    );
+    log(
+      "Unable to install PIP packages in your system! Check manually and install it!"
+    );
+  }
+}
+
+export async function installRequirements() {
   /** This installs the Python packages from the file. */
   let methodStatus = true;
+  log("Inside install requirements");
+  if (existsSync(pipPackagePath)) {
+    
+    const pipPackageCount = readdirSync(pipPackagePath)?.length;
+    log(`There are a total of ${pipPackageCount} PIP packages`);
+    let command: string = `& "${join(__dirname, "../venv/Scripts/pip")}" install -r "${join(
+      __dirname,
+      "../requirements.txt")}"`;
+      // check if the PIP packages are installed 
+      if (pipPackageCount) {
+        
+        if (pipPackageCount < 10) {
+          // install the packages needed for voice recognition server
+          log("Started installing the requirements");
+          log(`Executing command - ${command}`);
+          vscode.window.showInformationMessage("Started installing PIP packages! It might take some minutes..");
+        exec(command).on("error", (error: any) => {
+          log("Error while installing requirements");
 
-  const pipPackageCount = readdirSync(pipPackagePath).length;
-  log(`There are a total of ${pipPackageCount} PIP packages`);
+          vscode.window.showErrorMessage(
+            `Can't install requirements file - ${error}`
+          );
+          methodStatus = false;
+        });
+          if (methodStatus) {
+            command = `& "${join(
+              __dirname,
+              "../venv/Scripts/pipwin"
+            )}" install pyaudio`;
+            exec(command).on("error", (error: any) => {
+              log(`Error while installing PyAudio - ${error}`);
 
-  // check if the PIP packages are installed 
-  if (pipPackageCount < 10) {
-    // install the packages needed for voice recognition server
-    log("Started installing the requirements");
-    exec(
-      `& "${join(__dirname, "../venv/Scripts/pip")}" install -r "${join(
-        __dirname,
-        "../requirements.txt"
-      )}"`
-    ).on("error", (error: any) => {
-      log("Error while installing requirements");
+              methodStatus = false;
+            });
+          }
+      } else {
+        log("PIP packages are already installed!");
 
-      vscode.window.showErrorMessage(
-        `Can't install requirements file - ${error}`
-      );
-    });
-    methodStatus = false;
-  } else {
-    log("PIP packages are already installed!");
-
-    // vscode.window.showInformationMessage("PIP packages are already installed!");
+        vscode.window.showInformationMessage("PIP packages are already installed!");
+      }
+    }
   }
+  else {
+    methodStatus = false;
+    log("site-packages folder is not available or the virtual environment is not yet created!");
+  }
+  log("Ended install requirements!")
   return methodStatus;
 }
 
-export function setupVirtualEnvironment() {
+export async function setupVirtualEnvironment() {
   /** This creates a virtual environment for the voice recognition server. */
 
   let methodStatus: boolean = true;
@@ -167,7 +214,7 @@ export function setupVirtualEnvironment() {
 
   } else {
     log("Virtual environment already exists");
-    // vscode.window.showInformationMessage("Virtual environment already exists");
+    vscode.window.showInformationMessage("Virtual environment already exists");
   }
   return methodStatus;
 }

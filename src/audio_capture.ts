@@ -9,10 +9,10 @@ import { mapCommand } from "./helper";
 export function activateVoice() {
   /** This initiates a WebSocket connection with the Python voice recognition server */
 
-  log("Voice mode activated!");
-
+  
   if (!ws) {
     ws = new WebSocket("ws://localhost:8001");
+    log("Voice mode activated!");
   } else {
     // if the connection is other than connected
     if (ws.readyState !== 1) {
@@ -21,6 +21,7 @@ export function activateVoice() {
       log("Creating a new WebSocket connection");
     } else {
       log("There is an existing WebSocket connection");
+      vscode.window.showInformationMessage("There is an existing WebSocket connection");
     }
   }
 
